@@ -1,0 +1,355 @@
+{
+  "meta": {
+    "version": "1.0",
+    "repos": 20,
+    "org": "Example Portfolio",
+    "generated": "2026-03-08T00:00:00Z"
+  },
+  "nodes": [
+    {
+      "id": "mobile-ios-app",
+      "name": "Mobile iOS App",
+      "group": "mobile",
+      "lang": "Swift",
+      "desc": "Primary consumer-facing iOS application",
+      "risk": "high",
+      "risks": ["backward compatibility", "encryption contract", "offline sync"],
+      "scan": {
+        "scanned_at": "2026-03-01T00:00:00Z",
+        "stack": "Swift",
+        "vulnerabilities": { "critical": 0, "high": 1, "medium": 2, "low": 3, "total": 6 },
+        "outdated_packages": 2,
+        "secrets_detected": 0,
+        "license_issues": 0
+      }
+    },
+    {
+      "id": "companion-ios-app",
+      "name": "Companion iOS App",
+      "group": "mobile",
+      "lang": "Swift",
+      "desc": "Companion iOS application shell for embedded workflows",
+      "risk": "high",
+      "risks": ["backward compatibility", "shared library changes", "offline data"],
+      "scan": {
+        "scanned_at": "2026-03-01T00:00:00Z",
+        "stack": "Swift",
+        "vulnerabilities": { "critical": 0, "high": 0, "medium": 1, "low": 2, "total": 3 },
+        "outdated_packages": 1,
+        "secrets_detected": 0,
+        "license_issues": 0
+      }
+    },
+    {
+      "id": "mobile-android-app",
+      "name": "Mobile Android App",
+      "group": "mobile",
+      "lang": "Kotlin",
+      "desc": "Primary consumer-facing Android application",
+      "risk": "high",
+      "risks": ["backward compatibility", "encryption contract", "offline sync"],
+      "scan": {
+        "scanned_at": "2026-03-01T00:00:00Z",
+        "stack": "Kotlin",
+        "vulnerabilities": { "critical": 0, "high": 1, "medium": 1, "low": 2, "total": 4 },
+        "outdated_packages": 3,
+        "secrets_detected": 0,
+        "license_issues": 0
+      }
+    },
+    {
+      "id": "shared-mobile-sdk",
+      "name": "Shared Mobile SDK",
+      "group": "mobile",
+      "lang": "Swift",
+      "desc": "Shared mobile SDK for workflow rendering and synchronized state",
+      "risk": "high",
+      "risks": ["shared dependency", "API surface changes", "backward compatibility"],
+      "scan": {
+        "scanned_at": "2026-03-01T00:00:00Z",
+        "stack": "Swift",
+        "vulnerabilities": { "critical": 0, "high": 0, "medium": 1, "low": 1, "total": 2 },
+        "outdated_packages": 0,
+        "secrets_detected": 0,
+        "license_issues": 0
+      }
+    },
+    {
+      "id": "mobile-telemetry-sdk",
+      "name": "Mobile Telemetry SDK",
+      "group": "mobile",
+      "lang": "Swift",
+      "desc": "Shared telemetry and logging SDK for mobile clients",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "api-gateway",
+      "name": "API Gateway",
+      "group": "gateway",
+      "lang": "Ruby, Rails",
+      "desc": "API gateway and routing layer for client applications",
+      "risk": "high",
+      "risks": ["central routing", "auth proxy", "rate limiting"],
+      "scan": {
+        "scanned_at": "2026-03-01T00:00:00Z",
+        "stack": "Ruby",
+        "vulnerabilities": { "critical": 0, "high": 0, "medium": 2, "low": 1, "total": 3 },
+        "outdated_packages": 4,
+        "secrets_detected": 0,
+        "license_issues": 1
+      }
+    },
+    {
+      "id": "design-service",
+      "name": "Design Service",
+      "group": "backend",
+      "lang": "Python, FastAPI",
+      "desc": "Backend for workflow design and builder operations",
+      "risk": "med",
+      "risks": ["schema changes", "data migration"]
+    },
+    {
+      "id": "workflow-studio-web",
+      "name": "Workflow Studio Web",
+      "group": "gateway",
+      "lang": "TypeScript, React",
+      "desc": "Web frontend for rendering and submitting dynamic workflows",
+      "risk": "med",
+      "risks": ["workflow rendering compatibility"]
+    },
+    {
+      "id": "analytics-web",
+      "name": "Analytics Web",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "Analytics and reporting web application",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "admin-console",
+      "name": "Admin Console",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "Administration console for tenant and access management",
+      "risk": "med",
+      "risks": ["access control", "tenant management"]
+    },
+    {
+      "id": "customer-portal",
+      "name": "Customer Portal",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "Customer-facing portal for account workflows and submissions",
+      "risk": "med",
+      "risks": ["sensitive data exposure", "workflow submission"]
+    },
+    {
+      "id": "config-studio",
+      "name": "Config Studio",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "Visual configuration and workflow designer",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "account-directory",
+      "name": "Account Directory",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "Directory and account list management component",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "preferences-web",
+      "name": "Preferences Web",
+      "group": "web",
+      "lang": "TypeScript, React",
+      "desc": "User preference and settings application",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "orchestration-service",
+      "name": "Orchestration Service",
+      "group": "backend",
+      "lang": "Python",
+      "desc": "Backend orchestration service for data processing and jobs",
+      "risk": "med",
+      "risks": ["data pipeline", "job scheduling"]
+    },
+    {
+      "id": "localization-service",
+      "name": "Localization Service",
+      "group": "backend",
+      "lang": "Python",
+      "desc": "Internationalization and localization management",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "rules-engine-service",
+      "name": "Rules Engine Service",
+      "group": "backend",
+      "lang": "Python, FastAPI",
+      "desc": "Rules-driven backend processing service",
+      "risk": "med",
+      "risks": ["business logic", "data validation"]
+    },
+    {
+      "id": "core-api-service",
+      "name": "Core API Service",
+      "group": "backend",
+      "lang": "Python",
+      "desc": "Core backend service for shared business logic",
+      "risk": "med",
+      "risks": ["core logic", "API contracts"]
+    },
+    {
+      "id": "feature-config-service",
+      "name": "Feature Config Service",
+      "group": "backend",
+      "lang": "Python",
+      "desc": "Configuration and feature-flag service",
+      "risk": "low",
+      "risks": []
+    },
+    {
+      "id": "agentic-sdlc-development",
+      "name": "Agentic SDLC",
+      "group": "tooling",
+      "lang": "JavaScript, Node.js",
+      "desc": "AI-native development lifecycle framework",
+      "risk": "low",
+      "risks": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "mobile-ios-app",
+      "target": "shared-mobile-sdk",
+      "type": "sdk",
+      "label": "depends on shared sdk"
+    },
+    {
+      "source": "companion-ios-app",
+      "target": "shared-mobile-sdk",
+      "type": "sdk",
+      "label": "depends on shared sdk"
+    },
+    {
+      "source": "mobile-ios-app",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "REST API calls"
+    },
+    {
+      "source": "companion-ios-app",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "REST API calls"
+    },
+    {
+      "source": "mobile-android-app",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "REST API calls"
+    },
+    {
+      "source": "api-gateway",
+      "target": "design-service",
+      "type": "api",
+      "label": "routes workflow requests"
+    },
+    {
+      "source": "api-gateway",
+      "target": "orchestration-service",
+      "type": "api",
+      "label": "routes data requests"
+    },
+    {
+      "source": "api-gateway",
+      "target": "rules-engine-service",
+      "type": "api",
+      "label": "routes rules requests"
+    },
+    {
+      "source": "workflow-studio-web",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "fetches workflow data"
+    },
+    {
+      "source": "admin-console",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "admin operations"
+    },
+    {
+      "source": "customer-portal",
+      "target": "api-gateway",
+      "type": "api",
+      "label": "customer submissions"
+    },
+    {
+      "source": "design-service",
+      "target": "localization-service",
+      "type": "api",
+      "label": "fetches translations"
+    },
+    {
+      "source": "orchestration-service",
+      "target": "core-api-service",
+      "type": "data",
+      "label": "data pipeline"
+    },
+    {
+      "source": "mobile-ios-app",
+      "target": "mobile-telemetry-sdk",
+      "type": "sdk",
+      "label": "logging telemetry"
+    },
+    {
+      "source": "companion-ios-app",
+      "target": "mobile-telemetry-sdk",
+      "type": "sdk",
+      "label": "logging telemetry"
+    },
+    {
+      "source": "feature-config-service",
+      "target": "api-gateway",
+      "type": "config",
+      "label": "feature flags"
+    }
+  ],
+  "groups": {
+    "mobile": {
+      "color": "#4A90D9",
+      "label": "Mobile Apps",
+      "size": 5
+    },
+    "gateway": {
+      "color": "#E67E22",
+      "label": "Gateway And Workflow Web",
+      "size": 2
+    },
+    "backend": {
+      "color": "#2ECC71",
+      "label": "Backend Services",
+      "size": 6
+    },
+    "web": {
+      "color": "#9B59B6",
+      "label": "Web Applications",
+      "size": 6
+    },
+    "tooling": {
+      "color": "#95A5A6",
+      "label": "Tooling",
+      "size": 1
+    }
+  }
+}

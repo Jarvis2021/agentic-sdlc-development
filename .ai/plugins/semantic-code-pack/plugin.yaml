@@ -1,0 +1,19 @@
+name: semantic-code-pack
+version: 1.0.0
+description: Semantic engineering abstractions for symbol search, usages, and rename preview.
+capabilities:
+  - search-symbols
+  - find-usages
+  - rename-preview
+  - refactor-planning
+tools:
+  - search_code_symbols
+  - get_symbol_usages
+  - get_rename_preview
+permissions:
+  - read_workspace
+dependencies:
+  - core
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

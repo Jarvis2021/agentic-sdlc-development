@@ -1,0 +1,44 @@
+# Visit https://github.com/your-org/platform-standards/blob/main/schemas/v1alpha1.schema.md for all the details of this file format.
+
+# This YAML file starts starts with '---', which is the separator for YAML documents within the same file.
+# If the repository contains more than one component, use multiple YAML documents in this same file to document each of them.
+
+# Instructions:
+# Read the comments on each line for quick on-spot instructions or the file format above for complete overview.
+# Update all values in <>.
+# Remove all the unnecesary extra comments from the file.
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+spec:
+  type: library
+  lifecycle: production
+  owner: engineer@your-org.com
+  experience: enablement
+
+metadata:
+  json_schema: https://github.com/your-org/platform-standards/tree/main/schemas/v1alpha1.schema.json
+
+  name: agentic-sdlc-development
+  title: Platform Agentic SDLC Framework
+  description: Production-grade AI-native SDLC framework for your organization. Provides embedded AI agents, multi-repo knowledge graph, RBAC, ALCOA+ audit trail, and domain-specific governance guardrails.
+
+  teams:
+    - number: 153
+      name: Platform
+
+  people:
+    - role: technical owner
+      email: engineer@your-org.com
+
+  channels:
+    - url: https://lse.org.slack.com/archives/C0AJK266FFF
+      role: slack
+      automated_messaging: false
+
+  annotations:
+    area: Platform
+    docs: https://github.com/Jarvis2021/agentic-sdlc-development/blob/main/README.md
+    jira: https://jira.your-org.com/projects/PLATFORM
+    framework_roles: |
+      engineer@your-org.com: architect

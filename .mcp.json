@@ -1,0 +1,100 @@
+{
+  "servers": {
+    "jira": {
+      "type": "rest",
+      "url": "",
+      "auth": "bearer",
+      "description": "JIRA REST API — set url to your JIRA instance"
+    },
+    "figma": {
+      "type": "rest",
+      "url": "",
+      "description": "Figma API — set url to your Figma project"
+    },
+    "slack": {
+      "type": "webhook",
+      "url": "",
+      "description": "Slack incoming webhook — for dependency audit alerts"
+    }
+  },
+  "plugins": {
+    "enabled": [
+      "browser-pack",
+      "compliance-pack",
+      "core",
+      "debug-pack",
+      "jira-pack",
+      "security-pack",
+      "semantic-code-pack"
+    ],
+    "catalog": [
+      {
+        "name": "browser-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "browser-verification",
+          "screenshots",
+          "console-network-evidence",
+          "runtime-proof"
+        ]
+      },
+      {
+        "name": "compliance-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "governance-queries",
+          "audit-support",
+          "release-evidence"
+        ]
+      },
+      {
+        "name": "core",
+        "version": "1.0.0",
+        "capabilities": [
+          "session-runtime",
+          "plan-memory",
+          "events",
+          "approvals"
+        ]
+      },
+      {
+        "name": "debug-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "diagnostics",
+          "evidence-bundles",
+          "self-heal-artifacts",
+          "ci-artifact-ingest"
+        ]
+      },
+      {
+        "name": "jira-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "story-context",
+          "prd-impact",
+          "work-item-sync"
+        ]
+      },
+      {
+        "name": "security-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "security-summary",
+          "dependency-audit",
+          "risk-overlay"
+        ]
+      },
+      {
+        "name": "semantic-code-pack",
+        "version": "1.0.0",
+        "capabilities": [
+          "search-symbols",
+          "find-usages",
+          "rename-preview",
+          "refactor-planning"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+# project-config.yaml — Agentic SDLC v1.0 Configuration
+# This file controls agent behavior, quality gates, and integrations
+
+quality:
+  rigor: enterprise
+  coverage_target: 95
+  require_parallel_tests: true
+  council_before_pr: true
+  e2e_verification_required: true
+rbac:
+  enabled: true
+compliance:
+  enabled: true
+  standard: cfr21
+contract_testing:
+  enabled: true
+  pact_broker_url: ""
+  bump_sh_doc: ""
+  spectral_ruleset: .spectral.yaml
+observability:
+  track_tokens: true
+multi_repo:
+  repos: []
+domain_guardrails:
+  phi_pii_warn: true
+  idempotency_required: true
+  ecdh_salt_protection: true
+  mobile_compat_window_months: 18
+dependency_auditing:
+  ci_enabled: true
+  schedule: "0 6 * * 1"
+  slack_webhook: ""
+  alert_on: ["high", "critical"]
+enterprise:
+  session_ledger: true
+  cost_tracking: true
+  release_gate: true
+  sdlc_benchmark: true
+  architecture_freeze: true
+  alcoa_plus: true
+  rbac_via_factbook: true
+  mcp_integration: true

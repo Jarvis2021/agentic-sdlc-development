@@ -1,0 +1,85 @@
+# domain-governance.yaml — organization governance layer
+# Applied to all governed repos. Loaded on every agent turn.
+
+org: platform
+version: "1.0"
+
+# --- GUARDRAILS ---
+guardrails:
+  phi_pii:
+    enabled: true
+    policy: configurable_sensitive_data_handling
+    warn_patterns:
+      - "person_name"
+      - "date_of_birth"
+      - "government_id"
+      - "home_address"
+      - "sensitive_payload"
+    allow_patterns:
+      - "record_id"
+      - "request_id"
+      - "trace_id"
+      - "idempotency_key"
+    action: WARN
+    note: >
+      Sensitive-data handling is organization-defined. Agents warn when
+      sensitive data patterns appear in source-code literals or config files,
+      while runtime logging and tracing rules remain configurable per team policy.
+
+  ecdh_contracts:
+    enabled: true
+    files:
+      - "AppEnvironment.swift"
+      - "Environment.kt"
+    action: REQUIRE_ARCHITECT_ADR
+
+  idempotency:
+    enabled: true
+    endpoints:
+      - "POST /api/submission"
+      - "POST /api/data-import"
+      - "DataImportCreateJob"
+    required_field: "idempotency_key"
+
+  mobile_compat:
+    window_months: 18
+    apps: ["mobile-ios-app", "companion-ios-app", "mobile-android-app"]
+
+  shared_library:
+    enabled: true
+    verify_before_merge: ["mobile-ios-app", "companion-ios-app", "mobile-android-app"]
+
+# --- COMPLIANCE ---
+compliance:
+  standard: "21 CFR Part 11"
+  alcoa_plus: true
+  audit_trail: ".ai/session-ledger.md"
+  decision_log: ".ai/decisions/"
+
+# --- REPO MAP ---
+repos:
+  mobile:
+    - mobile-ios-app
+    - companion-ios-app
+    - mobile-android-app
+    - shared-mobile-sdk
+  gateway:
+    - api-gateway
+    - workflow-studio-web
+  backend:
+    - design-service
+    - orchestration-service
+    - core-api-service
+    - feature-config-service
+    - localization-service
+    - rules-engine-service
+  web:
+    - admin-console
+    - customer-portal
+    - analytics-web
+    - preferences-web
+    - account-directory
+    - config-studio
+  tooling:
+    - agentic-sdlc-development
+   

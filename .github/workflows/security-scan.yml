@@ -1,0 +1,234 @@
+name: Cross-Repo Security Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run — scan but do not commit or notify'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
+      repos:
+        description: 'Comma-separated repo list (blank = all sample portfolio repos)'
+        required: false
+        default: ''
+        type: string
+  schedule:
+    - cron: '0 7 * * 1,4'  # Monday + Thursday 07:00 UTC
+
+permissions:
+  contents: write
+
+env:
+  GH_ORG: your-org
+  SCAN_RESULTS_DIR: /tmp/scan-results
+  KG_FILE: docs/knowledge-graph/knowledge-graph.json
+
+  TARGET_REPOS: >-
+    mobile-ios-app,companion-ios-app,mobile-android-app,shared-mobile-sdk,mobile-telemetry-sdk,api-gateway,
+    design-service,analytics-web,admin-console,customer-portal,workflow-studio-web,config-studio,
+    account-directory,preferences-web,localization-service,rules-engine-service,feature-config-service,orchestration-service
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    name: Security & Dependency Scan
+
+    steps:
+      - name: Checkout agentic-sdlc-development
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CROSS_REPO_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install audit tools
+        run: |
+          pip install pip-audit bandit safety --quiet
+          gem install bundler-audit brakeman --no-document --quiet
+          npm install -g npm-audit-resolver 2>/dev/null || true
+          echo "Audit tools installed"
+
+      - name: Determine repos to scan
+        id: repos
+        run: |
+          INPUT_REPOS="${{ github.event.inputs.repos }}"
+          if [ -n "$INPUT_REPOS" ]; then
+            REPO_LIST="$INPUT_REPOS"
+          else
+            REPO_LIST="$TARGET_REPOS"
+          fi
+          REPO_LIST=$(echo "$REPO_LIST" | tr -d '[:space:]' | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
+          echo "repos=$REPO_LIST" >> "$GITHUB_OUTPUT"
+          echo "Repos to scan: $REPO_LIST"
+
+      - name: Clone and scan each repo
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "$SCAN_RESULTS_DIR"
+          chmod +x scripts/security/scan-repo.sh
+
+          IFS=',' read -ra REPOS <<< "${{ steps.repos.outputs.repos }}"
+          FAILED=""
+
+          for REPO in "${REPOS[@]}"; do
+            REPO=$(echo "$REPO" | tr -d '[:space:]')
+            [ -z "$REPO" ] && continue
+
+            CLONE_DIR="/tmp/repos/$REPO"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "  Scanning: $GH_ORG/$REPO"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+            if git clone --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/${GH_ORG}/${REPO}.git" "$CLONE_DIR" 2>/dev/null; then
+              ./scripts/security/scan-repo.sh "$CLONE_DIR" "$SCAN_RESULTS_DIR" || {
+                echo "  [warn] scan-repo.sh failed for $REPO, creating minimal result"
+                echo "{\"repo\":\"$REPO\",\"stack\":\"unknown\",\"scanned_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"risk\":\"unknown\",\"vulnerabilities\":{\"critical\":0,\"high\":0,\"medium\":0,\"low\":0,\"total\":0},\"outdated_packages\":0,\"secrets_detected\":0,\"license_issues\":0}" > "$SCAN_RESULTS_DIR/${REPO}.json"
+              }
+              rm -rf "$CLONE_DIR"
+            else
+              echo "  [error] Failed to clone $GH_ORG/$REPO — skipping"
+              FAILED="$FAILED $REPO"
+            fi
+          done
+
+          echo ""
+          echo "=== Scan Phase Complete ==="
+          ls -la "$SCAN_RESULTS_DIR"/*.json 2>/dev/null || echo "No results generated"
+
+          if [ -n "$FAILED" ]; then
+            echo "::warning::Failed to clone:$FAILED"
+          fi
+
+      - name: Aggregate results into Knowledge Graph
+        run: |
+          echo "=== Aggregating scan results ==="
+          node scripts/security/aggregate-results.js "$SCAN_RESULTS_DIR" "$KG_FILE"
+
+      - name: Generate scan summary
+        id: summary
+        run: |
+          SUMMARY=$(node -e "
+            const fs = require('fs');
+            const dir = '$SCAN_RESULTS_DIR';
+            const files = fs.readdirSync(dir).filter(f => f.endsWith('.json') && f !== 'alerts.json');
+            let critical=0, high=0, medium=0, low=0, secrets=0, outdated=0;
+            const highRepos = [];
+
+            for (const f of files) {
+              const d = JSON.parse(fs.readFileSync(dir+'/'+f, 'utf8'));
+              const v = d.vulnerabilities || {};
+              critical += v.critical || 0;
+              high += v.high || 0;
+              medium += v.medium || 0;
+              low += v.low || 0;
+              secrets += d.secrets_detected || 0;
+              outdated += d.outdated_packages || 0;
+              if ((v.critical||0) > 0 || (v.high||0) > 0 || d.secrets_detected > 0) {
+                highRepos.push(d.repo);
+              }
+            }
+
+            const summary = {
+              repos_scanned: files.length,
+              critical, high, medium, low,
+              total_vulns: critical+high+medium+low,
+              secrets, outdated,
+              high_risk_repos: highRepos,
+              has_alerts: critical > 0 || secrets > 0,
+            };
+            console.log(JSON.stringify(summary));
+          ")
+
+          echo "summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+
+          echo ""
+          echo "=== SCAN SUMMARY ==="
+          echo "$SUMMARY" | node -e "
+            const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+            console.log('  Repos scanned:  ' + d.repos_scanned);
+            console.log('  CRITICAL:       ' + d.critical);
+            console.log('  HIGH:           ' + d.high);
+            console.log('  MEDIUM:         ' + d.medium);
+            console.log('  LOW:            ' + d.low);
+            console.log('  Secrets found:  ' + d.secrets);
+            console.log('  Outdated pkgs:  ' + d.outdated);
+            console.log('  Alert repos:    ' + (d.high_risk_repos.length > 0 ? d.high_risk_repos.join(', ') : 'none'));
+          "
+
+      - name: Commit updated Knowledge Graph
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$KG_FILE"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "security: update knowledge graph with scan results [automated]"
+            git push
+          fi
+
+      - name: Notify Slack on HIGH/CRITICAL findings
+        if: ${{ github.event.inputs.dry_run != 'true' && fromJSON(steps.summary.outputs.summary).has_alerts }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_SECURITY_WEBHOOK }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "::warning::SLACK_SECURITY_WEBHOOK not configured — skipping notification"
+            exit 0
+          fi
+
+          SUMMARY='${{ steps.summary.outputs.summary }}'
+          ALERT_REPOS=$(echo "$SUMMARY" | node -e "const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.high_risk_repos.join(', '))")
+          CRITICAL=$(echo "$SUMMARY" | node -e "const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.critical)")
+          HIGH=$(echo "$SUMMARY" | node -e "const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.high)")
+          SECRETS=$(echo "$SUMMARY" | node -e "const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.secrets)")
+
+          curl -X POST "$SLACK_WEBHOOK" \
+            -H 'Content-type: application/json' \
+            -d "{
+              \"blocks\": [
+                {
+                  \"type\": \"header\",
+                  \"text\": { \"type\": \"plain_text\", \"text\": \"🚨 Platform Security Scan Alert\", \"emoji\": true }
+                },
+                {
+                  \"type\": \"section\",
+                  \"fields\": [
+                    { \"type\": \"mrkdwn\", \"text\": \"*Critical CVEs:*\n${CRITICAL}\" },
+                    { \"type\": \"mrkdwn\", \"text\": \"*High CVEs:*\n${HIGH}\" },
+                    { \"type\": \"mrkdwn\", \"text\": \"*Secrets Detected:*\n${SECRETS}\" },
+                    { \"type\": \"mrkdwn\", \"text\": \"*Affected Repos:*\n${ALERT_REPOS}\" }
+                  ]
+                },
+                {
+                  \"type\": \"section\",
+                  \"text\": { \"type\": \"mrkdwn\", \"text\": \"<https://github.com/${GH_ORG}/agentic-sdlc-development/actions|View Full Scan Results> | <https://${GH_ORG}.github.io/agentic-sdlc-development/|Knowledge Graph>\" }
+                }
+              ]
+            }" || echo "Slack notification failed (non-fatal)"
+
+      - name: Upload scan artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-results
+          path: /tmp/scan-results/
+          retention-days: 30

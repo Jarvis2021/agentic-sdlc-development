@@ -1,0 +1,78 @@
+# Dependencies (Node.js, Python, etc.)
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg
+
+# Build output
+dist/
+out/
+build/
+target/
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE / Editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.envrc
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Package manager lock files (if not committing)
+# Uncomment the following lines if you don't want to commit lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# Pipfile.lock
+
+# Session and agent temporary files (runtime only, not committed)
+.ai/agent-exchange/tmp/
+.ai/session-state/
+.ai/plugins/registry.json
+
+# ============================================
+# Agentic SDLC Framework Notes
+# ============================================
+# .ai/ directory IS committed (session ledger, protocols, benchmarks, releases)
+# rbac-factbook.yaml IS committed (RBAC configuration)
+# scripts/hooks/ IS committed (git hook scripts)
+
+# npm package artifacts
+package-lock.json
+*.tgz

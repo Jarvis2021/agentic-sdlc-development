@@ -1,0 +1,28 @@
+# rbac-factbook.yaml — RBAC Team Role Registry
+# Controls which agents each team member can access and which files they can modify.
+# Separate from factbook.yaml (Backstage/DevOps Central metadata).
+apiVersion: v1
+kind: TeamRegistry
+metadata:
+  name: platform-team
+  annotations:
+    framework_roles: |
+      engineer@your-org.com: architect
+spec:
+  roles:
+    architect:
+      agents: ["*"]
+      can_modify: ["*"]
+      can_freeze: true
+    dev_lead:
+      agents: ["Planner", "Implementer", "Self-Healer", "Reviewer", "Releaser", "Story-Runner", "Knowledge-Graph"]
+      can_modify: ["src/", "tests/", "docs/"]
+      can_freeze: false
+    dev_engineer:
+      agents: ["Implementer", "Self-Healer"]
+      can_modify: ["src/", "tests/"]
+      can_freeze: false
+    test_engineer:
+      agents: ["Self-Healer", "Quality-Gate"]
+      can_modify: ["tests/"]
+      can_freeze: false

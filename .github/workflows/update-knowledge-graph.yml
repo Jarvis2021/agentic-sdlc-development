@@ -1,0 +1,79 @@
+name: Update Knowledge Graph Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run — scan and validate without committing'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
+  schedule:
+    - cron: '0 2 * * *'  # Nightly at 02:00 UTC
+
+permissions:
+  contents: write
+
+jobs:
+  scan-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout agentic-sdlc-development
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scan Platform org repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/scan-org-deps.js $DRY_FLAG
+
+      - name: Validate knowledge-graph.json
+        run: |
+          KG_FILE="docs/knowledge-graph/knowledge-graph.json"
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('$KG_FILE', 'utf8'));
+            const errors = [];
+            if (!data.meta)  errors.push('Missing meta object');
+            if (!data.nodes) errors.push('Missing nodes array');
+            if (!data.edges) errors.push('Missing edges array');
+            if (data.nodes) {
+              const ids = new Set(data.nodes.map(n => n.id));
+              if (ids.size !== data.nodes.length) errors.push('Duplicate node IDs');
+              for (const n of data.nodes) {
+                if (!n.id || !n.name || !n.group) errors.push('Node missing fields: ' + n.id);
+              }
+            }
+            if (data.edges) {
+              const nodeIds = new Set((data.nodes || []).map(n => n.id));
+              for (const e of data.edges) {
+                if (!nodeIds.has(e.source)) errors.push('Edge source not found: ' + e.source);
+                if (!nodeIds.has(e.target)) errors.push('Edge target not found: ' + e.target);
+              }
+            }
+            if (errors.length) { errors.forEach(e => console.error('  - ' + e)); process.exit(1); }
+            console.log('Validation passed: ' + data.nodes.length + ' nodes, ' + data.edges.length + ' edges');
+          "
+
+      - name: Commit and push (if changed)
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/knowledge-graph/knowledge-graph.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(kg): auto-update knowledge graph from org scan"
+            git push
+          fi

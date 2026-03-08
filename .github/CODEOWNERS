@@ -1,0 +1,33 @@
+# CODEOWNERS file for Agentic SDLC Framework
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Code owners are automatically requested for review when someone opens a pull request that modifies code that they own.
+# The last matching pattern takes the most precedence.
+
+# Default owner for everything in the repository
+# Replace with your organization's architect email(s)
+* @Jarvis2021
+
+# Framework core files (AGENTS.md, protocols, RBAC, governance)
+/AGENTS.md @Jarvis2021
+/.ai/protocols/ @Jarvis2021
+/rbac-factbook.yaml @Jarvis2021
+/.ai/domain-governance.yaml @Jarvis2021
+/.ai/project-config.yaml @Jarvis2021
+
+# Architecture decisions (ADRs)
+/.ai/decisions/ @Jarvis2021
+
+# GitHub configuration and workflows
+/.github/ @Jarvis2021
+
+# Git hooks and scripts
+/scripts/hooks/ @Jarvis2021
+
+# Skills (framework capabilities)
+/.ai/skills/ @Jarvis2021
+
+# Documentation (can be owned by tech writers or architects)
+/README.md @Jarvis2021
+/CONTRIBUTING.md @Jarvis2021
+/docs/ @Jarvis2021

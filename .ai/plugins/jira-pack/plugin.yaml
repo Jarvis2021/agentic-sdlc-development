@@ -1,0 +1,18 @@
+name: jira-pack
+version: 1.0.0
+description: Work-item, story-context, and PRD impact integrations for requirements-driven execution.
+capabilities:
+  - story-context
+  - prd-impact
+  - work-item-sync
+tools:
+  - get_story_context
+  - get_prd_impact
+permissions:
+  - read_workspace
+  - read_external_work_items
+dependencies:
+  - core
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

@@ -1,0 +1,42 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# AI CONFIGURATION — Token Budgets, Model Preferences, Cost Tracking
+# ═══════════════════════════════════════════════════════════════════════════════
+
+token_budgets:
+  TRIVIAL: 5000
+  LOW: 20000
+  MEDIUM: 80000
+  HIGH: 200000
+  # Set to 0 to disable budget enforcement
+  enforce: true
+
+context_management:
+  # Compact conversation at this % of context window
+  compact_threshold_pct: 40
+  # Maximum CLAUDE.md + AGENTS.md combined tokens
+  max_root_context_tokens: 8000
+  # Maximum protocol file tokens loaded per session
+  max_protocol_tokens: 15000
+  # Enable progressive disclosure (Level 0 → 1 → 2)
+  progressive_disclosure: true
+
+session_hygiene:
+  # Auto-clear stale agent-exchange files older than N days
+  stale_exchange_days: 7
+  # Archive completed traces after N days
+  archive_traces_days: 30
+
+model_preferences:
+  # Default model for each agent role (override per-project)
+  specifier: "claude-sonnet-4-6"
+  planner: "claude-sonnet-4-6"
+  implementer: "claude-sonnet-4-6"
+  reviewer: "claude-opus-4-6"
+
+cost_tracking:
+  # Log token usage per task to .ai/token-logs/
+  enabled: true
+  # Alert when single task exceeds this token count
+  alert_threshold: 150000
+  # Daily budget cap (0 = no cap)
+  daily_cap: 0

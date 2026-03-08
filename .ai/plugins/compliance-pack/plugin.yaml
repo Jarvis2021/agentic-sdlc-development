@@ -1,0 +1,16 @@
+name: compliance-pack
+version: 1.0.0
+description: Governance, audit, and release evidence support for regulated or policy-heavy teams.
+capabilities:
+  - governance-queries
+  - audit-support
+  - release-evidence
+tools:
+  - query_governance
+permissions:
+  - read_workspace
+dependencies:
+  - core
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

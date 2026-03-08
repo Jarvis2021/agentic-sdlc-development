@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentic-sdlc-development://schemas/story-schema",
+  "title": "Platform SDLC Story Schema",
+  "description": "Strict schema for deterministic story output from PRD-to-Stories protocol. Every model must produce stories matching this structure exactly.",
+  "type": "object",
+  "required": ["prd_metadata", "stories", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "prd_metadata": {
+      "type": "object",
+      "description": "Source PRD traceability and context snapshot",
+      "required": ["prd_ref", "prd_hash", "context_snapshot", "generated_at"],
+      "additionalProperties": false,
+      "properties": {
+        "prd_ref": {
+          "type": "string",
+          "description": "PRD reference in format prd:<document-name>-v<version>",
+          "pattern": "^prd:[a-zA-Z0-9_-]+-v[0-9]+$"
+        },
+        "prd_hash": {
+          "type": "string",
+          "description": "SHA-256 hash of the PRD input text for replay verification"
+        },
+        "context_snapshot": {
+          "type": "object",
+          "description": "Hashes of all context loaded during story creation",
+          "required": ["knowledge_graph_hash", "governance_hash"],
+          "properties": {
+            "knowledge_graph_hash": { "type": "string" },
+            "governance_hash": { "type": "string" },
+            "contracts_hash": { "type": ["string", "null"] },
+            "adr_count": { "type": "integer", "minimum": 0 },
+            "architecture_freeze_active": { "type": "boolean" }
+          }
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of story generation"
+        }
+      }
+    },
+    "stories": {
+      "type": "array",
+      "description": "Array of decomposed stories, each targeting one repo",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/story"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Consolidated summary of the story set",
+      "required": [
+        "total_stories",
+        "service_groups",
+        "affected_repos",
+        "blast_radius",
+        "governance_flags",
+        "dependency_order",
+        "overall_confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_stories": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "service_groups": {
+          "type": "object",
+          "description": "Story count per service group",
+          "properties": {
+            "ios": { "type": "integer", "minimum": 0 },
+            "android": { "type": "integer", "minimum": 0 },
+            "backend": { "type": "integer", "minimum": 0 },
+            "web": { "type": "integer", "minimum": 0 },
+            "shared": { "type": "integer", "minimum": 0 },
+            "infra": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "affected_repos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Unique list of all repos touched by this story set"
+        },
+        "blast_radius": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH"],
+          "description": "LOW: 1-2 repos, MEDIUM: 3-5 repos, HIGH: 6+ repos"
+        },
+        "governance_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["phi_pii", "ecdh", "idempotency", "mobile_compat", "architecture_freeze"]
+          },
+          "description": "Union of all governance flags across all stories"
+        },
+        "dependency_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Topologically sorted story IDs - execute in this order"
+        },
+        "overall_confidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "MIN of all individual story confidence scores"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "story": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "service_group",
+        "target_repos",
+        "description",
+        "acceptance_criteria",
+        "story_points",
+        "dependencies",
+        "governance_flags",
+        "blast_radius",
+        "prd_ref",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Story ID in format PROJ-NNN",
+          "pattern": "^[A-Z]+-[0-9]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Imperative verb + object (e.g., 'Add dedup guard to API service')",
+          "minLength": 10,
+          "maxLength": 120
+        },
+        "service_group": {
+          "type": "string",
+          "enum": ["ios", "android", "backend", "web", "shared", "infra"],
+          "description": "Which service layer this story belongs to"
+        },
+        "target_repos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Which repos this story modifies"
+        },
+        "description": {
+          "type": "string",
+          "description": "What the story does and why it is needed",
+          "minLength": 20
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["predicate", "testable"],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "description": "Gherkin format: GIVEN x WHEN y THEN z"
+              },
+              "testable": {
+                "type": "boolean",
+                "description": "Can this AC be verified by an automated test?"
+              }
+            }
+          },
+          "minItems": 1,
+          "description": "Acceptance criteria in Gherkin format"
+        },
+        "story_points": {
+          "type": "integer",
+          "enum": [1, 2, 3, 5, 8],
+          "description": "Fibonacci story points. Max 8 - if larger, split."
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]+-[0-9]+$"
+          },
+          "description": "Story IDs that must complete before this one"
+        },
+        "governance_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["phi_pii", "ecdh", "idempotency", "mobile_compat", "architecture_freeze"]
+          },
+          "description": "Governance rules triggered by this story"
+        },
+        "blast_radius": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH"]
+        },
+        "prd_ref": {
+          "type": "string",
+          "description": "Reference to the PRD section this story was derived from",
+          "pattern": "^prd:[a-zA-Z0-9_-]+-v[0-9]+#.+$"
+        },
+        "confidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Confidence score. Below 60 = CRITICAL, requires human review before JIRA."
+        },
+        "implementation_notes": {
+          "type": "string",
+          "description": "Optional technical guidance for the implementer"
+        },
+        "risk_rating": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+          "description": "Risk level based on blast radius + governance flags"
+        }
+      }
+    }
+  }
+}

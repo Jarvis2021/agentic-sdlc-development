@@ -1,0 +1,66 @@
+# CONTEXT INDEX — Level 0 (Always Loaded via AGENTS.md reference)
+# Agent routing table. Read THIS FIRST, then lazy-load files.
+# Budget: under 80 lines / 300 words.
+version: "1.0"
+
+classification:
+  TRIVIAL:
+    protocols_loaded: []
+    gates: [lint]
+    token_budget: 5000
+  LOW:
+    protocols_loaded: [implementer.md]
+    gates: [lint, test]
+    token_budget: 20000
+  MEDIUM:
+    protocols_loaded: [implementer.md, reviewer.md]
+    gates: [lint, test, review-council, preflight]
+    token_budget: 80000
+    council_required: true
+    spec_required: true
+  HIGH:
+    protocols_loaded: [implementer.md, reviewer.md, self-healer.md]
+    gates: [lint, test, review-council, security-scan, preflight, approval-gate]
+    token_budget: 200000
+    council_required: true
+    spec_required: true
+    requires_human_approval: true
+
+agents:
+  specifier:
+    output: ".ai/specs/SLUG-spec.md"
+    handoff: planner
+  planner:
+    output: ".ai/plans/SLUG-plan.md"
+    handoff: implementer
+  implementer:
+    output: "source files + tests"
+    handoff: reviewer
+    protocol: ".ai/protocols/implementer.md"
+  reviewer:
+    output: ".ai/agent-exchange/reviewer-output.md"
+    handoff: "implementer (MUST-FIX) or committer (PASS)"
+    protocol: ".ai/protocols/reviewer.md"
+  self_healer:
+    output: "fixed code or escalation"
+    handoff: "reviewer or human (after 3 failures)"
+    protocol: ".ai/protocols/self-healer.md"
+
+sdd_pipeline:
+  - {step: specify, agent: specifier, gate: "human reviews spec"}
+  - {step: plan, agent: planner, gate: "human reviews plan"}
+  - {step: implement, agent: implementer, gate: "tests pass + council"}
+  - {step: review, agent: reviewer, gate: "all MUST-FIX resolved"}
+  - {step: ship, gate: "preflight passes + PR approved"}
+
+golden_rules:
+  - "CLASSIFY FIRST: every task gets TRIVIAL/LOW/MEDIUM/HIGH before action"
+  - "SPEC BEFORE CODE: MEDIUM+ tasks require spec.md"
+  - "PLAN BEFORE IMPLEMENT: MEDIUM+ tasks require plan.md"
+  - "COUNCIL BEFORE COMMIT: MEDIUM+ tasks require review council PASS"
+  - "SELF-HEALER MAX 3: escalate after 3 failed fix attempts"
+  - "TOKEN BUDGET: respect per-classification budget, compact at 40%"
+  - "TRACE EVERYTHING: every action logged"
+  - "NO SECRETS IN CODE"
+  - "NO PLACEHOLDER CODE: complete or don't write it"
+  - "POST-IMPLEMENTATION COUNCIL: run council before commit"

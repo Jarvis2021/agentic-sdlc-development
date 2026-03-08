@@ -1,0 +1,17 @@
+name: security-pack
+version: 1.0.0
+description: Security, dependency, and risk analysis integrations for CI and repo intelligence.
+capabilities:
+  - security-summary
+  - dependency-audit
+  - risk-overlay
+tools:
+  - get_security_summary
+  - get_repo_risks
+permissions:
+  - read_workspace
+dependencies:
+  - core
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

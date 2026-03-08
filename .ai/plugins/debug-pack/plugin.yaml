@@ -1,0 +1,19 @@
+name: debug-pack
+version: 1.0.0
+description: Structured diagnostics, evidence bundles, and self-heal telemetry.
+capabilities:
+  - diagnostics
+  - evidence-bundles
+  - self-heal-artifacts
+  - ci-artifact-ingest
+tools:
+  - get_diagnostics_feed
+  - capture_debug_evidence
+permissions:
+  - read_workspace
+  - write_runtime_state
+dependencies:
+  - core
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

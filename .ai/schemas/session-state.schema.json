@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agentic Session State",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "current_session_id",
+    "current_plan_id",
+    "current_trace_id",
+    "counters"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "current_session_id": { "type": ["string", "null"] },
+    "current_plan_id": { "type": ["string", "null"] },
+    "current_trace_id": { "type": ["string", "null"] },
+    "counters": {
+      "type": "object",
+      "required": ["sessions", "plans", "tasks", "traces", "approvals", "diagnostics", "events"],
+      "properties": {
+        "sessions": { "type": "integer", "minimum": 0 },
+        "plans": { "type": "integer", "minimum": 0 },
+        "tasks": { "type": "integer", "minimum": 0 },
+        "traces": { "type": "integer", "minimum": 0 },
+        "approvals": { "type": "integer", "minimum": 0 },
+        "diagnostics": { "type": "integer", "minimum": 0 },
+        "events": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "updated_at": { "type": ["string", "null"] }
+  }
+}

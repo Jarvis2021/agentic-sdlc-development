@@ -1,0 +1,103 @@
+name: Dependency Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect ecosystems
+        id: detect
+        run: |
+          [ -f package.json ] && echo "npm=true" >> $GITHUB_OUTPUT || true
+          { [ -f pyproject.toml ] || [ -f requirements.txt ]; } && echo "python=true" >> $GITHUB_OUTPUT || true
+          [ -f Gemfile ] && echo "ruby=true" >> $GITHUB_OUTPUT || true
+          [ -f Podfile ] && echo "cocoapods=true" >> $GITHUB_OUTPUT || true
+
+      - name: Setup Node
+        if: steps.detect.outputs.npm == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: npm audit
+        if: steps.detect.outputs.npm == 'true'
+        run: |
+          npm audit --json > audit-npm.json || true
+          npm outdated --json > outdated-npm.json || true
+
+      - name: Setup Python
+        if: steps.detect.outputs.python == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: pip-audit
+        if: steps.detect.outputs.python == 'true'
+        run: |
+          pip install pip-audit
+          pip-audit --format=json > audit-python.json || true
+          pip list --outdated --format=json > outdated-python.json || true
+
+      - name: Setup Ruby
+        if: steps.detect.outputs.ruby == 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: bundler-audit
+        if: steps.detect.outputs.ruby == 'true'
+        run: |
+          gem install bundler-audit
+          bundle audit check --format=json > audit-ruby.json || true
+          bundle outdated --parseable > outdated-ruby.txt || true
+
+      - name: Merge reports
+        run: node .ai/scripts/merge-audit-reports.js
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-status
+          path: .ai/dependency-status.json
+
+      - name: Check severity
+        id: severity
+        run: |
+          CRITICAL=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' .ai/dependency-status.json 2>/dev/null || echo 0)
+          HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' .ai/dependency-status.json 2>/dev/null || echo 0)
+          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+
+      - name: Slack notification
+        if: fromJSON(steps.severity.outputs.critical) > 0 || fromJSON(steps.severity.outputs.high) > 0
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "Dependency Audit Alert",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repo*: ${{ github.repository }}\n*Critical*: ${{ steps.severity.outputs.critical }}\n*High*: ${{ steps.severity.outputs.high }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Fail on critical
+        if: fromJSON(steps.severity.outputs.critical) > 0
+        run: |
+          echo "::error::${{ steps.severity.outputs.critical }} critical vulnerabilities detected"
+          exit 1

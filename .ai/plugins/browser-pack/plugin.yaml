@@ -1,0 +1,20 @@
+name: browser-pack
+version: 1.0.0
+description: Optional browser verification pack for UI/runtime proof and screenshot/network evidence capture.
+capabilities:
+  - browser-verification
+  - screenshots
+  - console-network-evidence
+  - runtime-proof
+tools:
+  - capture_debug_evidence
+permissions:
+  - read_workspace
+  - write_runtime_state
+  - browser_automation
+dependencies:
+  - core
+  - debug-pack
+compatibility:
+  framework: ">=1.0.0"
+  node: ">=18.0.0"

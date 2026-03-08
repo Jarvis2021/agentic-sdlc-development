@@ -1,0 +1,56 @@
+{
+  "name": "agentic-sdlc-development",
+  "version": "1.0.0",
+  "description": "Agentic SDLC Framework - AI-native development lifecycle with runtime-backed collaboration, evidence-driven debugging, and bounded token architecture",
+  "main": "bin/cli.js",
+  "bin": {
+    "agentic-sdlc": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
+    "vitest": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jarvis2021/agentic-sdlc-development.git"
+  },
+  "keywords": [
+    "agentic",
+    "sdlc",
+    "agents",
+    "framework",
+    "ai-native",
+    "development",
+    "devops",
+    "ci-cd",
+    "llm",
+    "coding-agents"
+  ],
+  "author": "Jarvis2021",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "mcp-server/",
+    "docs/",
+    "AGENTS.md",
+    ".ai/",
+    "rbac-factbook.yaml",
+    ".mcp.json",
+    ".github/",
+    "scripts/",
+    ".gitignore",
+    "README.md"
+  ],
+  "dependencies": {
+    "yaml": "^2.8.2"
+  }
+}
