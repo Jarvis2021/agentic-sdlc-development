@@ -110,7 +110,7 @@ describe('vscode extension package manifest', () => {
     const pkg = JSON.parse(fs.readFileSync(EXTENSION_PKG, 'utf8'));
 
     expect(pkg.engines.vscode).toBe('^1.110.0');
-    expect(pkg.version).toBe('1.0.2');
+    expect(pkg.version).toBe('1.0.3');
     expect(pkg.activationEvents).toContain('onStartupFinished');
     expect(pkg.contributes.views.explorer.some((view) => view.id === 'agenticSdlcRuntime')).toBe(true);
     expect(pkg.contributes.views.explorer.some((view) => view.id === 'agenticSdlcDiagnostics')).toBe(true);
