@@ -18,29 +18,16 @@ MIT-licensed and designed for open-source use by any team or individual.
 ### For New or Existing Projects
 
 ```bash
-# 1. Clone the framework
-git clone https://github.com/Jarvis2021/agentic-sdlc-development.git
+# Scaffold a brand new project directory
+npx agentic-sdlc-development my-project
 
-# 2. Copy framework files into your project
-cp -r agentic-sdlc-development/{AGENTS.md,.ai,rbac-factbook.yaml,.mcp.json,.github,scripts} ./your-project/
+# Or scaffold into an existing repository
+cd your-project
+npx agentic-sdlc-development init .
 
-# 3. Configure RBAC with your team emails
-# Edit rbac-factbook.yaml and add your team:
-# annotations:
-#   framework_roles: |
-#     alice@example.com: architect
-#     bob@example.com: dev_lead
-#     charlie@example.com: dev_engineer
-
-# 4. Initialize (auto-detects existing code or scaffolds new project)
-# Open in any AGENTS.md-compatible IDE and say:
-#    "init" — analyze existing codebase
-#    "init --repos ../repo1 ../repo2" — multi-repo knowledge graph
-
-# 5. Push to GitHub — CI workflows activate automatically
-git add AGENTS.md .ai rbac-factbook.yaml .mcp.json .github scripts
-git commit -m "feat: adopt Agentic SDLC v1.0"
-git push
+# Optional: install globally for repeated use
+npm install -g agentic-sdlc-development
+agentic-sdlc init .
 ```
 
 **What the framework setup does**:
@@ -48,6 +35,22 @@ git push
 2. Takes 30 seconds and initializes structured runtime state under `.ai/session-state/`
 3. Detects your stack (Node.js, Python, Swift, Kotlin, etc.)
 4. Registers built-in plugin packs for debugging, browser verification, security, compliance, and semantic code tools
+
+### After Scaffolding
+
+```bash
+# Configure RBAC with your team emails
+# Edit rbac-factbook.yaml and add your team:
+# annotations:
+#   framework_roles: |
+#     alice@example.com: architect
+#     bob@example.com: dev_lead
+#     charlie@example.com: dev_engineer
+
+git add AGENTS.md .ai rbac-factbook.yaml .mcp.json .github scripts
+git commit -m "feat: adopt Agentic SDLC v1.0"
+git push
+```
 
 ### Runtime Commands
 

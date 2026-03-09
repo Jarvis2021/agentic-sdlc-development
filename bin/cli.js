@@ -70,7 +70,9 @@ if (args.includes('--version')) {
   process.exit(0);
 }
 
-if (command === 'validate') {
+if (command === 'init') {
+  runInit(resolveDirectory(args[1] || '.'));
+} else if (command === 'validate') {
   runValidate(resolveDirectory(args[1]));
 } else if (command === 'status') {
   runStatus(resolveDirectory(args[1]));
@@ -206,8 +208,8 @@ function runInit(dir) {
   const absoluteTarget = path.resolve(dir);
 
   if (!fs.existsSync(absoluteTarget)) {
-    console.error(`❌ Error: Directory "${dir}" does not exist.`);
-    process.exit(1);
+    fs.mkdirSync(absoluteTarget, { recursive: true });
+    console.log(`📁 Created target directory: ${absoluteTarget}\n`);
   }
 
   if (!fs.statSync(absoluteTarget).isDirectory()) {

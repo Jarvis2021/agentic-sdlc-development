@@ -39,8 +39,13 @@ describe('CLI Integration', () => {
     expect(output.trim()).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  it('exits with error for non-existent directory', () => {
-    expect(() => runCli('/tmp/nonexistent-platform-dir-xyz')).toThrow();
+  it('creates a non-existent target directory', () => {
+    const targetDir = path.join(os.tmpdir(), 'nonexistent-platform-dir-xyz');
+    cleanupDir(targetDir);
+    runCli(targetDir);
+    expect(fs.existsSync(targetDir)).toBe(true);
+    expect(fs.existsSync(path.join(targetDir, 'AGENTS.md'))).toBe(true);
+    cleanupDir(targetDir);
   });
 });
 
@@ -53,6 +58,12 @@ describe('CLI scaffolding', () => {
   it('scaffolds AGENTS.md into target', () => {
     runCli(tmpDir);
     expect(fs.existsSync(path.join(tmpDir, 'AGENTS.md'))).toBe(true);
+  });
+
+  it('supports explicit init command syntax', () => {
+    const targetDir = path.join(tmpDir, 'nested-project');
+    runCli(`init "${targetDir}"`);
+    expect(fs.existsSync(path.join(targetDir, 'AGENTS.md'))).toBe(true);
   });
 
   it('scaffolds .ai/ directory', () => {

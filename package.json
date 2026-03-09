@@ -4,7 +4,8 @@
   "description": "Agentic SDLC Framework - AI-native development lifecycle with runtime-backed collaboration, evidence-driven debugging, and bounded token architecture",
   "main": "bin/cli.js",
   "bin": {
-    "agentic-sdlc": "./bin/cli.js"
+    "agentic-sdlc": "./bin/cli.js",
+    "agentic-sdlc-development": "./bin/cli.js"
   },
   "scripts": {
     "test": "vitest run",
@@ -48,7 +49,14 @@
     ".github/",
     "scripts/",
     ".gitignore",
-    "README.md"
+    "README.md",
+    "!.ai/plugins/registry.json",
+    "!.ai/session-state/**",
+    "!.ai/plans/**",
+    "!.ai/specs/**",
+    "!.ai/tasks/**",
+    "!.ai/token-logs/**",
+    "!.ai/traces/**"
   ],
   "dependencies": {
     "yaml": "^2.8.2"
