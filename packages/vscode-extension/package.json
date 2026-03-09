@@ -2,7 +2,7 @@
   "name": "agentic-sdlc-vscode",
   "displayName": "Agentic SDLC",
   "description": "Debug-first VS Code extension for Agentic SDLC runtime snapshots, diagnostics, and evidence capture.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "PramodKumarVoola",
   "license": "MIT",
   "repository": {
