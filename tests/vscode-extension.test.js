@@ -7,6 +7,9 @@ import { execSync } from 'child_process';
 const ROOT = path.resolve(__dirname, '..');
 const CLI_PATH = path.resolve(ROOT, 'bin/cli.js');
 const EXTENSION_PKG = path.join(ROOT, 'packages/vscode-extension/package.json');
+const EXTENSION_README = path.join(ROOT, 'packages/vscode-extension/README.md');
+const EXTENSION_ICON = path.join(ROOT, 'packages/vscode-extension/icon.png');
+const EXTENSION_DIAGRAM = path.join(ROOT, 'packages/vscode-extension/media/architecture-diagram.png');
 
 const {
   buildDiagnosticsItems,
@@ -107,9 +110,26 @@ describe('vscode extension package manifest', () => {
     const pkg = JSON.parse(fs.readFileSync(EXTENSION_PKG, 'utf8'));
 
     expect(pkg.engines.vscode).toBe('^1.110.0');
-    expect(pkg.activationEvents).toContain('onCommand:agenticSdlc.captureCommandFailure');
+    expect(pkg.version).toBe('1.0.2');
+    expect(pkg.activationEvents).toContain('onStartupFinished');
     expect(pkg.contributes.views.explorer.some((view) => view.id === 'agenticSdlcRuntime')).toBe(true);
     expect(pkg.contributes.views.explorer.some((view) => view.id === 'agenticSdlcDiagnostics')).toBe(true);
     expect(pkg.dependencies['agentic-sdlc-development']).toBe('^1.0.0');
+    expect(pkg.icon).toBe('icon.png');
+    expect(pkg.files).toContain('README.md');
+    expect(pkg.files).toContain('icon.png');
+    expect(pkg.files).toContain('media/**/*.svg');
+    expect(pkg.files).toContain('media/**/*.png');
+  });
+
+  it('ships Marketplace README and visual assets', () => {
+    expect(fs.existsSync(EXTENSION_README)).toBe(true);
+    expect(fs.existsSync(EXTENSION_ICON)).toBe(true);
+    expect(fs.existsSync(EXTENSION_DIAGRAM)).toBe(true);
+
+    const readme = fs.readFileSync(EXTENSION_README, 'utf8');
+    expect(readme).toContain('# Agentic SDLC');
+    expect(readme).toContain('Compared with IDE-native agent features');
+    expect(readme).toContain('spec-kit');
   });
 });

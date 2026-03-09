@@ -1,0 +1,95 @@
+<svg width="1600" height="960" viewBox="0 0 1600 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111F"/>
+      <stop offset="1" stop-color="#133A7C"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="210" y1="160" x2="1390" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D1D33" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#10284B" stop-opacity="0.92"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="290" y1="250" x2="1310" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#63E8FF"/>
+      <stop offset="1" stop-color="#3C8DFF"/>
+    </linearGradient>
+    <filter id="shadow" x="150" y="110" width="1300" height="740" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="30" stdDeviation="30" flood-color="#020814" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="960" rx="32" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#7ADFFF">
+    <path d="M0 120H1600"/>
+    <path d="M0 240H1600"/>
+    <path d="M0 360H1600"/>
+    <path d="M0 480H1600"/>
+    <path d="M0 600H1600"/>
+    <path d="M0 720H1600"/>
+    <path d="M0 840H1600"/>
+    <path d="M160 0V960"/>
+    <path d="M320 0V960"/>
+    <path d="M480 0V960"/>
+    <path d="M640 0V960"/>
+    <path d="M800 0V960"/>
+    <path d="M960 0V960"/>
+    <path d="M1120 0V960"/>
+    <path d="M1280 0V960"/>
+    <path d="M1440 0V960"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="190" y="130" width="1220" height="700" rx="34" fill="url(#panel)" stroke="#5DCFFF" stroke-opacity="0.26" stroke-width="2"/>
+  </g>
+
+  <text x="250" y="215" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700">Agentic SDLC for VS Code</text>
+  <text x="250" y="255" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">Evidence-first extension shell over a repo-persisted SDLC runtime</text>
+
+  <rect x="250" y="320" width="270" height="280" rx="26" fill="#102649" stroke="#64DFFF" stroke-width="2"/>
+  <text x="285" y="385" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700">VS Code Shell</text>
+  <text x="285" y="430" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="22">Explorer views</text>
+  <text x="285" y="465" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="22">Command palette actions</text>
+  <text x="285" y="500" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="22">Status bar summary</text>
+  <text x="285" y="555" fill="#63E8FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">What users touch</text>
+
+  <rect x="620" y="255" width="330" height="410" rx="30" fill="#0E2340" stroke="#7BE5FF" stroke-width="3"/>
+  <text x="665" y="325" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="700">Runtime Bridge</text>
+  <text x="665" y="373" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">Workspace-scoped adapter</text>
+  <text x="665" y="425" fill="#D8F4FF" font-family="Arial, Helvetica, sans-serif" font-size="22">- get runtime snapshot</text>
+  <text x="665" y="462" fill="#D8F4FF" font-family="Arial, Helvetica, sans-serif" font-size="22">- get diagnostics feed</text>
+  <text x="665" y="499" fill="#D8F4FF" font-family="Arial, Helvetica, sans-serif" font-size="22">- capture debug evidence</text>
+  <text x="665" y="536" fill="#D8F4FF" font-family="Arial, Helvetica, sans-serif" font-size="22">- open latest trace</text>
+  <text x="665" y="590" fill="#63E8FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Thin layer, no duplicate engine</text>
+
+  <rect x="1050" y="230" width="300" height="190" rx="26" fill="#112B4C" stroke="#63E8FF" stroke-width="2"/>
+  <text x="1085" y="295" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Workspace Runtime</text>
+  <text x="1085" y="342" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="21">`.ai/session-state/`</text>
+  <text x="1085" y="376" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="21">plans, approvals, tasks, traces</text>
+
+  <rect x="1050" y="455" width="300" height="200" rx="26" fill="#112B4C" stroke="#63E8FF" stroke-width="2"/>
+  <text x="1085" y="520" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Debug Fabric</text>
+  <text x="1085" y="567" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="21">command, test, CI, browser</text>
+  <text x="1085" y="601" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="21">typed evidence + trace markdown</text>
+
+  <rect x="250" y="665" width="1100" height="110" rx="24" fill="#0C1C31" stroke="#5ED3FF" stroke-width="2"/>
+  <text x="285" y="725" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Shared Control Plane</text>
+  <text x="565" y="725" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">CLI</text>
+  <text x="660" y="725" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">MCP</text>
+  <text x="770" y="725" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">Plugin Runtime</text>
+  <text x="980" y="725" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">Semantic Tools</text>
+  <text x="1195" y="725" fill="#A7C4E8" font-family="Arial, Helvetica, sans-serif" font-size="24">Release Path</text>
+
+  <path d="M520 460H620" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M950 360H1050" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M950 560H1050" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M785 665V600" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+
+  <circle cx="520" cy="460" r="13" fill="#63E8FF"/>
+  <circle cx="620" cy="460" r="13" fill="#63E8FF"/>
+  <circle cx="950" cy="360" r="13" fill="#63E8FF"/>
+  <circle cx="950" cy="560" r="13" fill="#63E8FF"/>
+  <circle cx="1050" cy="360" r="13" fill="#63E8FF"/>
+  <circle cx="1050" cy="560" r="13" fill="#63E8FF"/>
+  <circle cx="785" cy="665" r="13" fill="#63E8FF"/>
+
+  <text x="250" y="885" fill="#9AB9DD" font-family="Arial, Helvetica, sans-serif" font-size="22">Differentiator: repo-persisted runtime state and typed evidence, not just chat memory or editor-local logs.</text>
+</svg>
