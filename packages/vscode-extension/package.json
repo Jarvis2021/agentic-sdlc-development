@@ -101,6 +101,7 @@
     "agentic-sdlc-development": "^1.0.0"
   },
   "files": [
+    "LICENSE",
     "extension.js",
     "lib/**/*.js"
   ]
