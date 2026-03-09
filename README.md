@@ -62,6 +62,23 @@ agentic-sdlc events --limit 20
 agentic-sdlc plugins list
 ```
 
+### VS Code Extension Package
+
+Phase 1 now includes a debug-first VS Code package at `packages/vscode-extension/`. It is a thin UI layer over the same runtime modules used by the framework, so diagnostics, traces, and resume state stay workspace-scoped and IDE-agnostic.
+
+```bash
+cd packages/vscode-extension
+npm install
+npx @vscode/vsce package
+```
+
+The extension contributes:
+
+- Runtime and diagnostics views in the Explorer
+- Commands to capture command, test, CI, and browser verification evidence
+- Resume snapshot inspection and latest trace opening
+- A status bar summary for the active Agentic SDLC session
+
 ---
 
 ## What This Framework Includes
@@ -131,6 +148,7 @@ The framework now operates as a small control plane rather than a collection of 
 - **Debug fabric**: command failures, test failures, CI evidence, and browser verification share a common schema
 - **Plugin runtime**: optional packs expose debugging, browser, security, compliance, JIRA, and semantic capabilities
 - **Semantic layer**: symbol search, usage lookup, and rename preview can map to host-native APIs when available
+- **VS Code package**: `packages/vscode-extension/` adds a debug-first shell without duplicating runtime logic
 
 ### Layered Design
 
