@@ -3,7 +3,9 @@
     "version": "1.0",
     "repos": 20,
     "org": "Example Portfolio",
-    "generated": "2026-03-08T00:00:00Z"
+    "generated": "2026-03-09T07:28:53Z",
+    "last_scan": "2026-03-09T07:28:53Z",
+    "total_findings": 0
   },
   "nodes": [
     {
@@ -13,11 +15,21 @@
       "lang": "Swift",
       "desc": "Primary consumer-facing iOS application",
       "risk": "high",
-      "risks": ["backward compatibility", "encryption contract", "offline sync"],
+      "risks": [
+        "backward compatibility",
+        "encryption contract",
+        "offline sync"
+      ],
       "scan": {
         "scanned_at": "2026-03-01T00:00:00Z",
         "stack": "Swift",
-        "vulnerabilities": { "critical": 0, "high": 1, "medium": 2, "low": 3, "total": 6 },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 1,
+          "medium": 2,
+          "low": 3,
+          "total": 6
+        },
         "outdated_packages": 2,
         "secrets_detected": 0,
         "license_issues": 0
@@ -30,11 +42,21 @@
       "lang": "Swift",
       "desc": "Companion iOS application shell for embedded workflows",
       "risk": "high",
-      "risks": ["backward compatibility", "shared library changes", "offline data"],
+      "risks": [
+        "backward compatibility",
+        "shared library changes",
+        "offline data"
+      ],
       "scan": {
         "scanned_at": "2026-03-01T00:00:00Z",
         "stack": "Swift",
-        "vulnerabilities": { "critical": 0, "high": 0, "medium": 1, "low": 2, "total": 3 },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 0,
+          "medium": 1,
+          "low": 2,
+          "total": 3
+        },
         "outdated_packages": 1,
         "secrets_detected": 0,
         "license_issues": 0
@@ -47,11 +69,21 @@
       "lang": "Kotlin",
       "desc": "Primary consumer-facing Android application",
       "risk": "high",
-      "risks": ["backward compatibility", "encryption contract", "offline sync"],
+      "risks": [
+        "backward compatibility",
+        "encryption contract",
+        "offline sync"
+      ],
       "scan": {
         "scanned_at": "2026-03-01T00:00:00Z",
         "stack": "Kotlin",
-        "vulnerabilities": { "critical": 0, "high": 1, "medium": 1, "low": 2, "total": 4 },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 1,
+          "medium": 1,
+          "low": 2,
+          "total": 4
+        },
         "outdated_packages": 3,
         "secrets_detected": 0,
         "license_issues": 0
@@ -64,11 +96,21 @@
       "lang": "Swift",
       "desc": "Shared mobile SDK for workflow rendering and synchronized state",
       "risk": "high",
-      "risks": ["shared dependency", "API surface changes", "backward compatibility"],
+      "risks": [
+        "shared dependency",
+        "API surface changes",
+        "backward compatibility"
+      ],
       "scan": {
         "scanned_at": "2026-03-01T00:00:00Z",
         "stack": "Swift",
-        "vulnerabilities": { "critical": 0, "high": 0, "medium": 1, "low": 1, "total": 2 },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 0,
+          "medium": 1,
+          "low": 1,
+          "total": 2
+        },
         "outdated_packages": 0,
         "secrets_detected": 0,
         "license_issues": 0
@@ -90,11 +132,21 @@
       "lang": "Ruby, Rails",
       "desc": "API gateway and routing layer for client applications",
       "risk": "high",
-      "risks": ["central routing", "auth proxy", "rate limiting"],
+      "risks": [
+        "central routing",
+        "auth proxy",
+        "rate limiting"
+      ],
       "scan": {
         "scanned_at": "2026-03-01T00:00:00Z",
         "stack": "Ruby",
-        "vulnerabilities": { "critical": 0, "high": 0, "medium": 2, "low": 1, "total": 3 },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 0,
+          "medium": 2,
+          "low": 1,
+          "total": 3
+        },
         "outdated_packages": 4,
         "secrets_detected": 0,
         "license_issues": 1
@@ -107,7 +159,10 @@
       "lang": "Python, FastAPI",
       "desc": "Backend for workflow design and builder operations",
       "risk": "med",
-      "risks": ["schema changes", "data migration"]
+      "risks": [
+        "schema changes",
+        "data migration"
+      ]
     },
     {
       "id": "workflow-studio-web",
@@ -116,7 +171,9 @@
       "lang": "TypeScript, React",
       "desc": "Web frontend for rendering and submitting dynamic workflows",
       "risk": "med",
-      "risks": ["workflow rendering compatibility"]
+      "risks": [
+        "workflow rendering compatibility"
+      ]
     },
     {
       "id": "analytics-web",
@@ -134,7 +191,10 @@
       "lang": "TypeScript, React",
       "desc": "Administration console for tenant and access management",
       "risk": "med",
-      "risks": ["access control", "tenant management"]
+      "risks": [
+        "access control",
+        "tenant management"
+      ]
     },
     {
       "id": "customer-portal",
@@ -143,7 +203,10 @@
       "lang": "TypeScript, React",
       "desc": "Customer-facing portal for account workflows and submissions",
       "risk": "med",
-      "risks": ["sensitive data exposure", "workflow submission"]
+      "risks": [
+        "sensitive data exposure",
+        "workflow submission"
+      ]
     },
     {
       "id": "config-studio",
@@ -179,7 +242,10 @@
       "lang": "Python",
       "desc": "Backend orchestration service for data processing and jobs",
       "risk": "med",
-      "risks": ["data pipeline", "job scheduling"]
+      "risks": [
+        "data pipeline",
+        "job scheduling"
+      ]
     },
     {
       "id": "localization-service",
@@ -197,7 +263,10 @@
       "lang": "Python, FastAPI",
       "desc": "Rules-driven backend processing service",
       "risk": "med",
-      "risks": ["business logic", "data validation"]
+      "risks": [
+        "business logic",
+        "data validation"
+      ]
     },
     {
       "id": "core-api-service",
@@ -206,7 +275,10 @@
       "lang": "Python",
       "desc": "Core backend service for shared business logic",
       "risk": "med",
-      "risks": ["core logic", "API contracts"]
+      "risks": [
+        "core logic",
+        "API contracts"
+      ]
     },
     {
       "id": "feature-config-service",
