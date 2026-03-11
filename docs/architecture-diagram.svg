@@ -1,117 +1,66 @@
-<svg width="1200" height="920" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="920" fill="#0b1220"/>
+<svg width="1200" height="860" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="860" fill="#0b1220"/>
 
-  <text x="600" y="42" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#e2e8f0" text-anchor="middle">
+  <text x="600" y="44" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#e2e8f0" text-anchor="middle">
     Agentic SDLC Framework v1.0 Architecture
   </text>
-  <text x="600" y="72" font-family="Arial, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">
-    IDE-agnostic control plane with runtime state, debug evidence, plugin packs, and semantic tooling
+  <text x="600" y="74" font-family="Arial, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">
+    Minimal entrypoint, on-demand retrieval, structured runtime evidence
   </text>
 
-  <rect x="40" y="105" width="1120" height="120" rx="12" fill="#111827" stroke="#3b82f6" stroke-width="2.5"/>
-  <text x="600" y="135" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#93c5fd" text-anchor="middle">
-    Entry Layer
-  </text>
+  <rect x="60" y="120" width="1080" height="110" rx="14" fill="#111827" stroke="#60a5fa" stroke-width="2.5"/>
+  <text x="600" y="153" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#bfdbfe" text-anchor="middle">Small entrypoint</text>
+  <rect x="110" y="172" width="220" height="38" rx="8" fill="#1d4ed8"/>
+  <text x="220" y="196" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">AGENTS.md router</text>
+  <rect x="390" y="172" width="220" height="38" rx="8" fill="#1d4ed8"/>
+  <text x="500" y="196" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">Task classification</text>
+  <rect x="670" y="172" width="220" height="38" rx="8" fill="#1d4ed8"/>
+  <text x="780" y="196" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">Lookup pointers only</text>
 
-  <rect x="80" y="155" width="200" height="50" rx="8" fill="#1d4ed8"/>
-  <text x="180" y="186" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">AGENTS.md</text>
+  <rect x="60" y="265" width="330" height="240" rx="14" fill="#0f3a2e" stroke="#34d399" stroke-width="2.5"/>
+  <text x="225" y="305" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#d1fae5" text-anchor="middle">Context resolver</text>
+  <text x="225" y="345" font-family="Arial, sans-serif" font-size="14" fill="#a7f3d0" text-anchor="middle">Retrieve only what the task needs</text>
+  <text x="225" y="380" font-family="Arial, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">NOW.md for active work</text>
+  <text x="225" y="408" font-family="Arial, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">project-config and governance on demand</text>
+  <text x="225" y="436" font-family="Arial, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">protocols and skills only when triggered</text>
+  <text x="225" y="464" font-family="Arial, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">source, tests, and diff chosen by task</text>
 
-  <rect x="320" y="155" width="200" height="50" rx="8" fill="#1d4ed8"/>
-  <text x="420" y="186" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">CLI Commands</text>
+  <rect x="435" y="265" width="330" height="240" rx="14" fill="#142d5c" stroke="#60a5fa" stroke-width="2.5"/>
+  <text x="600" y="305" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#dbeafe" text-anchor="middle">Structured runtime</text>
+  <text x="600" y="345" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe" text-anchor="middle">Small records, reusable across tools</text>
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="13" fill="#dbeafe" text-anchor="middle">`.ai/session-state/`</text>
+  <text x="600" y="408" font-family="Arial, sans-serif" font-size="13" fill="#dbeafe" text-anchor="middle">plans, approvals, tasks, traces, events</text>
+  <text x="600" y="436" font-family="Arial, sans-serif" font-size="13" fill="#dbeafe" text-anchor="middle">diagnostics and trace files</text>
+  <text x="600" y="464" font-family="Arial, sans-serif" font-size="13" fill="#dbeafe" text-anchor="middle">human reports generated only when needed</text>
 
-  <rect x="560" y="155" width="200" height="50" rx="8" fill="#1d4ed8"/>
-  <text x="660" y="186" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">Git Hooks</text>
+  <rect x="810" y="265" width="330" height="240" rx="14" fill="#3f245f" stroke="#c084fc" stroke-width="2.5"/>
+  <text x="975" y="305" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#f3e8ff" text-anchor="middle">Optional capabilities</text>
+  <text x="975" y="345" font-family="Arial, sans-serif" font-size="14" fill="#e9d5ff" text-anchor="middle">Loaded selectively, not by default</text>
+  <text x="975" y="380" font-family="Arial, sans-serif" font-size="13" fill="#f3e8ff" text-anchor="middle">protocols</text>
+  <text x="975" y="408" font-family="Arial, sans-serif" font-size="13" fill="#f3e8ff" text-anchor="middle">skills</text>
+  <text x="975" y="436" font-family="Arial, sans-serif" font-size="13" fill="#f3e8ff" text-anchor="middle">plugin packs</text>
+  <text x="975" y="464" font-family="Arial, sans-serif" font-size="13" fill="#f3e8ff" text-anchor="middle">cross-repo and semantic tooling</text>
 
-  <rect x="800" y="155" width="280" height="50" rx="8" fill="#1d4ed8"/>
-  <text x="940" y="186" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">MCP Server + Tool Resources</text>
+  <rect x="60" y="560" width="1080" height="120" rx="14" fill="#111827" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="600" y="595" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fde68a" text-anchor="middle">Execution surfaces</text>
+  <text x="240" y="640" font-family="Arial, sans-serif" font-size="15" fill="#fef3c7" text-anchor="middle">CLI</text>
+  <text x="430" y="640" font-family="Arial, sans-serif" font-size="15" fill="#fef3c7" text-anchor="middle">MCP tools</text>
+  <text x="620" y="640" font-family="Arial, sans-serif" font-size="15" fill="#fef3c7" text-anchor="middle">Git hooks and workflows</text>
+  <text x="905" y="640" font-family="Arial, sans-serif" font-size="15" fill="#fef3c7" text-anchor="middle">VS Code extension</text>
 
-  <rect x="40" y="255" width="1120" height="270" rx="12" fill="#111827" stroke="#10b981" stroke-width="2.5"/>
-  <text x="600" y="287" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#6ee7b7" text-anchor="middle">
-    Runtime Control Plane
-  </text>
+  <rect x="60" y="720" width="1080" height="90" rx="14" fill="#111827" stroke="#ef4444" stroke-width="2.5"/>
+  <text x="600" y="754" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fecaca" text-anchor="middle">Validation model</text>
+  <text x="600" y="790" font-family="Arial, sans-serif" font-size="14" fill="#fecaca" text-anchor="middle">Use targeted tests, commands, CI checks, and runtime proof. Prefer observed evidence over broad prompt instructions.</text>
 
-  <rect x="80" y="315" width="250" height="165" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-  <text x="205" y="345" font-family="Arial, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">Session Runtime</text>
-  <text x="205" y="375" font-family="Arial, sans-serif" font-size="12" fill="#d1fae5" text-anchor="middle">`.ai/session-state/`</text>
-  <text x="205" y="400" font-family="Arial, sans-serif" font-size="12" fill="#a7f3d0" text-anchor="middle">Plans, tasks, approvals</text>
-  <text x="205" y="422" font-family="Arial, sans-serif" font-size="12" fill="#a7f3d0" text-anchor="middle">Traces, events, handoffs</text>
-  <text x="205" y="444" font-family="Arial, sans-serif" font-size="12" fill="#a7f3d0" text-anchor="middle">Resume + continuity across turns</text>
-
-  <rect x="365" y="315" width="250" height="165" rx="10" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
-  <text x="490" y="345" font-family="Arial, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">Debug Fabric</text>
-  <text x="490" y="375" font-family="Arial, sans-serif" font-size="12" fill="#dbeafe" text-anchor="middle">Command, test, CI, browser</text>
-  <text x="490" y="400" font-family="Arial, sans-serif" font-size="12" fill="#bfdbfe" text-anchor="middle">Typed diagnostics + evidence bundles</text>
-  <text x="490" y="422" font-family="Arial, sans-serif" font-size="12" fill="#bfdbfe" text-anchor="middle">Attempt history + verification traces</text>
-  <text x="490" y="444" font-family="Arial, sans-serif" font-size="12" fill="#bfdbfe" text-anchor="middle">MCP-visible debug status</text>
-
-  <rect x="650" y="315" width="250" height="165" rx="10" fill="#581c87" stroke="#c084fc" stroke-width="2"/>
-  <text x="775" y="345" font-family="Arial, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">Plugin Runtime</text>
-  <text x="775" y="375" font-family="Arial, sans-serif" font-size="12" fill="#f3e8ff" text-anchor="middle">Pack manifests + registry</text>
-  <text x="775" y="400" font-family="Arial, sans-serif" font-size="12" fill="#e9d5ff" text-anchor="middle">Enable, disable, validate, sync</text>
-  <text x="775" y="422" font-family="Arial, sans-serif" font-size="12" fill="#e9d5ff" text-anchor="middle">Pack-aware `.mcp.json` composition</text>
-  <text x="775" y="444" font-family="Arial, sans-serif" font-size="12" fill="#e9d5ff" text-anchor="middle">Optional capability packs</text>
-
-  <rect x="935" y="315" width="185" height="165" rx="10" fill="#3f3f46" stroke="#a1a1aa" stroke-width="2"/>
-  <text x="1027" y="345" font-family="Arial, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">Semantic Layer</text>
-  <text x="1027" y="375" font-family="Arial, sans-serif" font-size="12" fill="#e4e4e7" text-anchor="middle">Symbol search</text>
-  <text x="1027" y="400" font-family="Arial, sans-serif" font-size="12" fill="#d4d4d8" text-anchor="middle">Find usages</text>
-  <text x="1027" y="422" font-family="Arial, sans-serif" font-size="12" fill="#d4d4d8" text-anchor="middle">Rename preview</text>
-  <text x="1027" y="444" font-family="Arial, sans-serif" font-size="12" fill="#d4d4d8" text-anchor="middle">LSP-first, search fallback</text>
-
-  <rect x="40" y="555" width="1120" height="190" rx="12" fill="#111827" stroke="#f59e0b" stroke-width="2.5"/>
-  <text x="600" y="587" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fcd34d" text-anchor="middle">
-    Capability Packs And Evidence Paths
-  </text>
-
-  <rect x="80" y="620" width="150" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="155" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">debug-pack</text>
-  <text x="155" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">Diagnostics</text>
-
-  <rect x="250" y="620" width="150" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="325" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">browser-pack</text>
-  <text x="325" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">UI proof</text>
-
-  <rect x="420" y="620" width="150" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="495" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">security-pack</text>
-  <text x="495" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">Risk overlays</text>
-
-  <rect x="590" y="620" width="150" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="665" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">jira-pack</text>
-  <text x="665" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">Story context</text>
-
-  <rect x="760" y="620" width="180" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="850" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">semantic-code-pack</text>
-  <text x="850" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">Usages + rename</text>
-
-  <rect x="960" y="620" width="160" height="80" rx="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2"/>
-  <text x="1040" y="650" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">compliance-pack</text>
-  <text x="1040" y="675" font-family="Arial, sans-serif" font-size="11" fill="#fed7aa" text-anchor="middle">Governance</text>
-
-  <rect x="40" y="775" width="1120" height="105" rx="12" fill="#111827" stroke="#ef4444" stroke-width="2.5"/>
-  <text x="600" y="807" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fca5a5" text-anchor="middle">
-    Delivery And Validation
-  </text>
-  <text x="200" y="845" font-family="Arial, sans-serif" font-size="13" fill="#fecaca" text-anchor="middle">GitHub Actions: tests, coverage, validation</text>
-  <text x="500" y="845" font-family="Arial, sans-serif" font-size="13" fill="#fecaca" text-anchor="middle">Knowledge graph + governance checks</text>
-  <text x="815" y="845" font-family="Arial, sans-serif" font-size="13" fill="#fecaca" text-anchor="middle">Review loops consume shared evidence model</text>
-  <text x="1030" y="845" font-family="Arial, sans-serif" font-size="13" fill="#fecaca" text-anchor="middle">Ship with runtime proof</text>
-
-  <path d="M 600 225 L 600 255" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 205 480 L 205 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 490 480 L 325 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 490 480 L 155 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 775 480 L 850 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 775 480 L 1040 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 1027 480 L 850 620" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-  <path d="M 600 745 L 600 775" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M600 230 V255" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M390 385 H435" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M765 385 H810" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M600 505 V560" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M600 680 V720" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
 
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#64748b"/>
     </marker>
   </defs>
-
-  <text x="600" y="902" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
-    v1.0 | Session runtime | Debug fabric | Plugin packs | Semantic tools | IDE-agnostic delivery
-  </text>
 </svg>

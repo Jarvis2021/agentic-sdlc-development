@@ -2,20 +2,31 @@
 
 ## Overview
 
-This repository is the MIT-licensed open-source reference implementation for the Agentic SDLC Framework v1.0. Teams and individual builders can adopt it directly, fork it, or adapt it for their own repositories.
+This repository is the MIT-licensed reference implementation for Agentic SDLC v1.0. Teams and individuals can adopt it directly, fork it, or adapt it for their own repositories.
 
 ## Prerequisites
 
 - A GitHub account
-- Familiarity with the framework (read `AGENTS.md` and `README.md` first)
+- Familiarity with the framework (`AGENTS.md` and `README.md`)
 - Architect role in `rbac-factbook.yaml` for structural changes
 
-## Configuring RBAC for Your Team
+## Contribution principles
+
+Prefer contributions that improve:
+
+- smaller default context surfaces
+- structured runtime state and evidence capture
+- tool-based retrieval and validation
+- thin editor integrations over duplicated workflow engines
+
+Avoid growing the project by default through broad prompt files, inflated agent rosters, or always-loaded context.
+
+## Configuring RBAC for your team
 
 To enable role-based access control in your project:
 
-1. **Edit `rbac-factbook.yaml`** in your project root
-2. **Add your team members** to the `annotations.framework_roles` section:
+1. Edit `rbac-factbook.yaml` in your project root.
+2. Add your team members to the `annotations.framework_roles` section:
 
 ```yaml
 metadata:
@@ -27,8 +38,8 @@ metadata:
       diana.chen@your-org.com: test_engineer
 ```
 
-3. **Agent resolves identity** via `git config user.email` — ensure your git email matches the one in `rbac-factbook.yaml`
-4. **Commit and push** — RBAC is now active
+3. Ensure `git config user.email` matches the address in `rbac-factbook.yaml`.
+4. Commit and push the change.
 
 ### Role Capabilities
 
@@ -39,7 +50,7 @@ metadata:
 
 ### Testing RBAC
 
-Try modifying `AGENTS.md` as a `dev_engineer` — you should see:
+Try modifying `AGENTS.md` as a `dev_engineer` and you should see:
 ```
 ❌ RBAC BLOCKED: Your role (dev_engineer) cannot modify AGENTS.md. Required: architect.
 ```
@@ -53,53 +64,52 @@ If RBAC isn't working, verify:
 | Category | Who Can Change | ADR Required |
 |----------|---------------|:------------:|
 | Protocol content (`.ai/protocols/*.md`) | architect, dev_lead | No (unless structural) |
-| Agent roster in `AGENTS.md` | architect | Yes |
+| Routing entrypoint in `AGENTS.md` | architect | Yes |
 | Governance (`domain-governance.yaml`) | architect | Yes |
 | RBAC roles (`rbac-factbook.yaml`) | architect | Yes |
 | CI workflows (`.github/workflows/`) | architect, dev_lead | No |
 | README / docs | architect, dev_lead | No |
-| Benchmark / release reports | architect | No |
+| Runtime schemas and tooling | architect, dev_lead | No |
 
-## Proposing a New Agent
+## Proposing a new workflow capability
 
-1. Write the protocol in `.ai/protocols/your-agent.md` following existing format:
-   - Title, trigger conditions, process steps, output location, rules
-2. Add the agent to the appropriate table in `AGENTS.md` (Core or Extended)
-3. Create an ADR in `.ai/decisions/architecture-decisions.md` explaining why
-4. Update the agent count in `AGENTS.md`, `CONTEXT_COMPRESSED.md`, and `README.md`
-5. Submit PR with evidence of testing in at least one consumer repo
+1. Describe the problem first.
+2. Prefer a tool, runtime artifact, schema, or lookup path before proposing a larger prompt surface.
+3. If a protocol is still needed, place it under `.ai/protocols/` and keep it retrieval-oriented.
+4. Add an ADR for structural changes.
+5. Submit a PR with evidence of testing.
 
-## Proposing a New Skill
+## Proposing a new skill
 
 1. Create `.ai/skills/your-skill/SKILL.md` following AgentSkills.io format
 2. Document trigger conditions and what the skill provides
-3. Submit PR — no ADR required for skills (they're on-demand)
+3. Submit a PR. No ADR is required for on-demand skills unless the change is structural.
 
-## Updating Governance Guardrails
+## Updating governance guardrails
 
-Guardrail changes in `domain-governance.yaml` affect ALL consuming repos.
+Guardrail changes in `domain-governance.yaml` affect all consuming repos.
 
 1. Create an ADR explaining the change and its impact
 2. Update `domain-governance.yaml` with the new guardrail
 3. Test against at least one consumer repo (verify agents respect the change)
 4. Submit PR with ADR reference
 
-## Updating Architecture Decisions
+## Updating architecture decisions
 
 Architecture decisions are recorded in `.ai/decisions/architecture-decisions.md`.
 
-- New decisions: append a new `## ADR-NNN` section (never edit existing ADRs)
+- New decisions: append a new `## ADR-NNN` section
 - Changed decisions: mark the old ADR as `Status: Superseded by ADR-NNN`, then create the new one
-- The architecture freeze (`.ai/decisions/ARCHITECTURE-FREEZE-v1.0.md`) lists what cannot be changed without architect approval
+- The architecture freeze lists what cannot be changed without architect approval
 
 ## Branch Strategy
 
 We use trunk-based development with feature branches:
 
-- `main` — stable, released framework
-- `feature/*` — new features and changes
+- `main` - stable, released framework
+- `feature/*` - new features and changes
 - PR required for all changes to `main`
-- Review Council review before PR submission (run `review` command)
+- targeted review and validation before PR submission
 
 ## Commit Convention
 
@@ -116,15 +126,15 @@ Include story ID when applicable: `feat(PROJ-NNN): description`
 
 **Never** add `Co-authored-by`, `Signed-off-by`, or any tool attribution.
 
-## Testing Changes
+## Testing changes
 
 Before submitting a PR:
 
-1. Copy your changes to a consumer repo (e.g., your-backend-app)
-2. Run `init` to verify the framework loads correctly
-3. Verify agent triggers fire as expected
-4. Confirm no IDE-specific references in any file
-5. Run the dependency audit workflow manually if CI files changed
+1. Run the relevant local tests for the files you changed.
+2. Validate the smallest useful workflow path, not the entire repository by default.
+3. Confirm no IDE-specific references in shipped framework files unless the file is an editor-specific guide or package.
+4. If CI files changed, validate the workflow behavior explicitly.
+5. If editor integration changed, package or smoke-test that integration.
 
 ## Open Source Use
 

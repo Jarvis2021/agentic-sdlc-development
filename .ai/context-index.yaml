@@ -1,66 +1,61 @@
-# CONTEXT INDEX — Level 0 (Always Loaded via AGENTS.md reference)
-# Agent routing table. Read THIS FIRST, then lazy-load files.
-# Budget: under 80 lines / 300 words.
+# CONTEXT INDEX - Lookup map for on-demand retrieval
+# Use this file as a pointer set, not as default prompt context.
 version: "1.0"
 
 classification:
   TRIVIAL:
-    protocols_loaded: []
+    retrieve:
+      - ".ai/NOW.md"
     gates: [lint]
     token_budget: 5000
   LOW:
-    protocols_loaded: [implementer.md]
+    retrieve:
+      - ".ai/NOW.md"
+      - ".ai/project-config.yaml"
     gates: [lint, test]
     token_budget: 20000
   MEDIUM:
-    protocols_loaded: [implementer.md, reviewer.md]
-    gates: [lint, test, review-council, preflight]
+    retrieve:
+      - ".ai/NOW.md"
+      - ".ai/project-config.yaml"
+      - ".ai/domain-governance.yaml"
+      - ".ai/protocols/implementer.md"
+      - ".ai/protocols/reviewer.md"
+    gates: [lint, test, review, preflight]
     token_budget: 80000
-    council_required: true
-    spec_required: true
   HIGH:
-    protocols_loaded: [implementer.md, reviewer.md, self-healer.md]
-    gates: [lint, test, review-council, security-scan, preflight, approval-gate]
+    retrieve:
+      - ".ai/NOW.md"
+      - ".ai/project-config.yaml"
+      - ".ai/domain-governance.yaml"
+      - ".ai/protocols/implementer.md"
+      - ".ai/protocols/reviewer.md"
+      - ".ai/protocols/self-healer.md"
+    gates: [lint, test, review, security-scan, preflight]
     token_budget: 200000
-    council_required: true
-    spec_required: true
     requires_human_approval: true
 
-agents:
-  specifier:
-    output: ".ai/specs/SLUG-spec.md"
-    handoff: planner
-  planner:
-    output: ".ai/plans/SLUG-plan.md"
-    handoff: implementer
-  implementer:
-    output: "source files + tests"
-    handoff: reviewer
-    protocol: ".ai/protocols/implementer.md"
-  reviewer:
-    output: ".ai/agent-exchange/reviewer-output.md"
-    handoff: "implementer (MUST-FIX) or committer (PASS)"
-    protocol: ".ai/protocols/reviewer.md"
-  self_healer:
-    output: "fixed code or escalation"
-    handoff: "reviewer or human (after 3 failures)"
-    protocol: ".ai/protocols/self-healer.md"
+retrieval_paths:
+  runtime_state:
+    - ".ai/session-state/index.json"
+    - ".ai/session-state/events.jsonl"
+  diagnostics:
+    - ".ai/session-state/diagnostics/"
+    - ".ai/traces/"
+  governance:
+    - "rbac-factbook.yaml"
+    - ".ai/project-config.yaml"
+    - ".ai/domain-governance.yaml"
+  design_history:
+    - ".ai/decisions/"
+    - ".ai/history/"
+  deep_workflows:
+    - ".ai/protocols/"
+    - ".ai/skills/"
 
-sdd_pipeline:
-  - {step: specify, agent: specifier, gate: "human reviews spec"}
-  - {step: plan, agent: planner, gate: "human reviews plan"}
-  - {step: implement, agent: implementer, gate: "tests pass + council"}
-  - {step: review, agent: reviewer, gate: "all MUST-FIX resolved"}
-  - {step: ship, gate: "preflight passes + PR approved"}
-
-golden_rules:
-  - "CLASSIFY FIRST: every task gets TRIVIAL/LOW/MEDIUM/HIGH before action"
-  - "SPEC BEFORE CODE: MEDIUM+ tasks require spec.md"
-  - "PLAN BEFORE IMPLEMENT: MEDIUM+ tasks require plan.md"
-  - "COUNCIL BEFORE COMMIT: MEDIUM+ tasks require review council PASS"
-  - "SELF-HEALER MAX 3: escalate after 3 failed fix attempts"
-  - "TOKEN BUDGET: respect per-classification budget, compact at 40%"
-  - "TRACE EVERYTHING: every action logged"
-  - "NO SECRETS IN CODE"
-  - "NO PLACEHOLDER CODE: complete or don't write it"
-  - "POST-IMPLEMENTATION COUNCIL: run council before commit"
+principles:
+  - "CLASSIFY FIRST: identify task scope before loading more context"
+  - "RETRIEVE, DO NOT PRELOAD: load only what the task needs"
+  - "USE STRUCTURED STATE: prefer runtime JSON and diagnostics over broad summaries"
+  - "KEEP PROMPTS SMALL: include only non-obvious operational details"
+  - "USE EVIDENCE: validate changes with tests, commands, CI, or runtime proof"

@@ -2,7 +2,7 @@
 
 Evidence-first engineering workflows for Visual Studio Code.
 
-`Agentic SDLC` brings the runtime-backed parts of the broader Agentic SDLC Framework into VS Code: structured diagnostics, resumable session state, trace capture, and a workspace view over the execution control plane already living in your repo.
+`Agentic SDLC` brings the runtime-backed parts of the broader Agentic SDLC Framework into VS Code: structured diagnostics, resumable session state, trace capture, and a workspace view over the execution runtime already living in your repo.
 
 ![Agentic SDLC architecture](media/architecture-diagram.png)
 
@@ -15,7 +15,7 @@ This extension focuses on the part that usually goes missing:
 - Typed debug evidence for command, test, CI, and browser failures
 - Workspace-scoped runtime state that survives editor restarts
 - Trace markdown and event history stored in your repo, not trapped in chat history
-- A thin VS Code shell over the same control-plane modules used by the CLI and MCP layers
+- A thin VS Code shell over the same runtime modules used by the CLI and MCP layers
 
 ## What you get
 
@@ -27,7 +27,7 @@ This extension focuses on the part that usually goes missing:
 
 ## Architecture
 
-The VS Code extension does not create a second workflow engine. It reuses the same workspace-scoped runtime used by the framework itself.
+The VS Code extension does not create a second workflow engine. It reuses the same workspace-scoped runtime used by the framework itself and activates on demand through its views and commands.
 
 ### Control plane layers
 
@@ -38,7 +38,7 @@ The VS Code extension does not create a second workflow engine. It reuses the sa
 3. **Workspace runtime**
    Reads and writes `.ai/session-state/`, `.ai/traces/`, and diagnostics artifacts.
 4. **Core framework**
-   Shares logic with the CLI, MCP surface, and repo-portable control plane.
+   Shares logic with the CLI, MCP surface, and repo-portable runtime.
 
 ## Where this fits
 

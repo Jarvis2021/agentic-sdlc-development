@@ -2,7 +2,7 @@
   "name": "agentic-sdlc-vscode",
   "displayName": "Agentic SDLC",
   "description": "Debug-first VS Code extension for Agentic SDLC runtime snapshots, diagnostics, and evidence capture.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "PramodKumarVoola",
   "license": "MIT",
   "icon": "icon.png",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jarvis2021/agentic-sdlc-development.git"
+    "url": "https://github.com/Jarvis2021/agentic-sdlc-development.git"
   },
   "homepage": "https://github.com/Jarvis2021/agentic-sdlc-development",
   "engines": {
@@ -42,9 +42,6 @@
   "main": "./extension.js",
   "extensionKind": [
     "workspace"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
   ],
   "contributes": {
     "commands": [
