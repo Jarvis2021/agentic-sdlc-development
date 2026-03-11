@@ -10,8 +10,8 @@ The following architectural decisions are FROZEN for v1.0. Changes require archi
 
 | # | Decision | ADR | What Is Frozen |
 |---|----------|-----|---------------|
-| 1 | AGENTS.md format | ADR-001 | File format, boot sequence, memory architecture |
-| 2 | Bounded memory | ADR-002 | Token budgets, lazy-load strategy |
+| 1 | AGENTS.md format | ADR-001 | File format, boot sequence, retrieval router |
+| 2 | Retrieval-first routing | ADR-002 | Token guardrails, selective retrieval strategy |
 | 3 | Protocol structure | ADR-003 | .ai/protocols/ directory, trigger table |
 | 4 | CI dependency audit | ADR-004 | GitHub Actions workflow, severity levels |
 | 5 | RBAC separation | ADR-005 | rbac-factbook.yaml separate from factbook.yaml |

@@ -32,7 +32,7 @@ Adopt AGENTS.md as the universal agent instruction format. This open-standard fi
 
 ---
 
-## ADR-002: Bounded Memory Architecture
+## ADR-002: Retrieval-First Routing With Bounded Guardrails
 
 **Date**: 2026-03-04
 **Status**: Accepted
@@ -40,11 +40,11 @@ Adopt AGENTS.md as the universal agent instruction format. This open-standard fi
 
 ### Context
 
-Loading all protocol files on every agent turn would cause token bloat as the framework grows. Early experiments showed that loading 10+ protocols could consume 5,000+ tokens per turn, degrading response quality and increasing cost.
+Loading all protocol files on every agent turn would cause token bloat as the framework grows. Fixed prompt bundles also age badly because agents often need only a small subset of the available guidance and runtime evidence.
 
 ### Decision
 
-Implement a bounded memory architecture: AGENTS.md (~1,200 tokens) and NOW.md (~150 tokens) are always loaded. Protocol files in `.ai/protocols/` are lazy-loaded only when their trigger fires (e.g., "plan" loads planner.md, "implement" loads implementer.md).
+Implement retrieval-first routing: `AGENTS.md` stays small, runtime state is read from `.ai/session-state/`, and protocols or governance files are retrieved only when the task requires them. Token budgets remain as operational guardrails, not as the primary architectural interface.
 
 ### Alternatives Considered
 
@@ -54,9 +54,9 @@ Implement a bounded memory architecture: AGENTS.md (~1,200 tokens) and NOW.md (~
 
 ### Consequences
 
-- Constant ~1,550 token overhead regardless of protocol count.
-- Framework scales to many protocols without degrading performance.
-- NOW.md stays bounded (~150 tokens) and rotates to history on story completion.
+- Agents begin from a small router plus structured runtime state.
+- Protocols and governance files load selectively, reducing noise and stale context.
+- Token budgets still cap cost and encourage compaction, but retrieval rules define behavior.
 
 ---
 
@@ -72,7 +72,7 @@ AGENTS.md could become a monolithic file containing all agent rules, triggers, a
 
 ### Decision
 
-Define agent behavior in separate `.ai/protocols/*.md` files. Each protocol (e.g., planner.md, implementer.md, self-healer.md) is a standalone document with trigger conditions, rules, and deliverables. AGENTS.md contains only the boot sequence, memory architecture, and a trigger table that maps commands to protocols.
+Define agent behavior in separate `.ai/protocols/*.md` files. Each protocol (e.g., planner.md, implementer.md, self-healer.md) is a standalone document with trigger conditions, rules, and deliverables. AGENTS.md contains only the boot sequence, retrieval policy, and lookup pointers that map tasks to optional deeper workflows.
 
 ### Alternatives Considered
 

@@ -9,8 +9,11 @@ const {
   getResumeSnapshot,
   getRuntimeSummary,
   listEvents,
+  recordOffset,
   readIndex,
   recordApproval,
+  saveCheckpoint,
+  startSprint,
   startSession,
   upsertPlan,
   createTrace,
@@ -43,6 +46,9 @@ Commands:
   resume [session_id] [dir]     Show active session, plan, tasks, approvals, and recent events
   trace [dir]                   Create a trace or evidence bundle for debugging/runtime proof
   events [dir]                  Show recent runtime events
+  sprint [dir]                  Start a focused execution burst on the active runtime
+  offset [dir]                  Record a council-backed strategy offset and resume cursor
+  save [dir]                    Persist a runtime checkpoint before reset or handoff
   plugins <action> [name] [dir] Manage plugin packs (list, add, remove, update, doctor)
 
 Options:
@@ -54,6 +60,9 @@ Options:
   --classification <level>      TRIVIAL | LOW | MEDIUM | HIGH
   --limit <n>                   Number of events to print
   --kind <kind>                 Trace kind (execution, debug, browser, ci)
+  --reason <text>               Reason for sprint, offset, or save behavior
+  --council <verdict>           Council verdict captured during an offset
+  --failure-streak <n>          Failure streak associated with the current execution
   --command <cmd>               Failing command for evidence capture
   --stderr <text>               stderr excerpt for debug evidence
   --stdout <text>               stdout excerpt for debug evidence
@@ -86,6 +95,12 @@ if (command === 'init') {
   runTrace(args.slice(1));
 } else if (command === 'events') {
   runEvents(args.slice(1));
+} else if (command === 'sprint') {
+  runSprint(args.slice(1));
+} else if (command === 'offset') {
+  runOffset(args.slice(1));
+} else if (command === 'save') {
+  runSave(args.slice(1));
 } else if (command === 'plugins') {
   runPlugins(args.slice(1));
 } else {
@@ -139,6 +154,8 @@ function runStatus(dir) {
   console.log(`  Open approvals:   ${runtime.open_approvals}`);
   console.log(`  Diagnostics:      ${diagnostics.total}`);
   console.log(`  Plugins:          ${plugins.length} (${plugins.filter(p => p.enabled).length} enabled)`);
+  console.log(`  Execution mode:   ${runtime.execution?.current_mode || 'unknown'}`);
+  console.log(`  Sprint status:    ${runtime.execution?.sprint?.status || 'unknown'}`);
   console.log('');
 }
 
@@ -350,6 +367,13 @@ function runResume(argv) {
   console.log(`  Story:         ${snapshot.current_session?.story || 'none'}`);
   console.log(`  Plan:          ${snapshot.current_plan?.id || 'none'}`);
   console.log(`  Trace:         ${snapshot.current_trace?.id || 'none'}`);
+  console.log(`  Execution:     ${snapshot.execution?.current_mode || 'unknown'} (${snapshot.execution?.sprint?.status || 'unknown'})`);
+  if (snapshot.execution?.offset_cursor?.reason) {
+    console.log(`  Offset reason: ${snapshot.execution.offset_cursor.reason}`);
+  }
+  if (snapshot.execution?.last_save?.reason) {
+    console.log(`  Last save:     ${snapshot.execution.last_save.reason}`);
+  }
   console.log(`  Open approvals:${snapshot.open_approvals.length}`);
   console.log(`  Tasks:         ${snapshot.task_summary.total}`);
   Object.entries(snapshot.task_summary.by_status).forEach(([status, count]) => {
@@ -406,6 +430,66 @@ function runEvents(argv) {
     console.log(`- ${event.created_at} | ${event.type} | ${event.message}`);
   });
   console.log('');
+}
+
+function runSprint(argv) {
+  const parsed = parseArgs(argv);
+  const dir = resolveDirectory(parsed.positionals[0] || parsed.flags.dir || '.');
+  ensureSessionRuntime(dir);
+  const snapshot = getResumeSnapshot(dir);
+  if (!snapshot.current_session) {
+    startSession(dir, {
+      story: parsed.flags.story || 'manual',
+      branch: getCurrentBranch(dir),
+      actor: 'implementer',
+      summary: parsed.flags.reason || 'manual sprint',
+    });
+  }
+
+  const execution = startSprint(dir, {
+    actor: 'implementer',
+    source: 'cli',
+    reason: parsed.flags.reason || 'focused execution',
+    failure_streak: toNumber(parsed.flags['failure-streak']),
+    reset_offset: true,
+  });
+
+  console.log(`\n⚡ Sprint active: burst ${execution.sprint.burst_count}`);
+  console.log(`   Mode:   ${execution.current_mode}`);
+  console.log(`   Status: ${execution.sprint.status}\n`);
+}
+
+function runOffset(argv) {
+  const parsed = parseArgs(argv);
+  const dir = resolveDirectory(parsed.positionals[0] || parsed.flags.dir || '.');
+  ensureSessionRuntime(dir);
+  const execution = recordOffset(dir, {
+    actor: 'council',
+    source: 'cli',
+    reason: parsed.flags.reason || 'strategy change requested',
+    council_verdict: parsed.flags.council || null,
+    failure_streak: toNumber(parsed.flags['failure-streak']),
+  });
+
+  console.log(`\n↩ Offset recorded`);
+  console.log(`   Mode:    ${execution.current_mode}`);
+  console.log(`   Reason:  ${execution.offset_cursor?.reason || 'n/a'}`);
+  console.log(`   Cursor:  ${execution.offset_cursor?.event_id || 'none'}\n`);
+}
+
+function runSave(argv) {
+  const parsed = parseArgs(argv);
+  const dir = resolveDirectory(parsed.positionals[0] || parsed.flags.dir || '.');
+  ensureSessionRuntime(dir);
+  const execution = saveCheckpoint(dir, {
+    actor: 'checkpoint',
+    source: 'cli',
+    reason: parsed.flags.reason || 'manual save',
+  });
+
+  console.log(`\n💾 Checkpoint saved`);
+  console.log(`   Reason: ${execution.last_save?.reason || 'n/a'}`);
+  console.log(`   Mode:   ${execution.last_save?.mode_before_save || execution.current_mode}\n`);
 }
 
 function runPlugins(argv) {
@@ -671,6 +755,14 @@ function resolveDirectory(dir) {
 function looksLikeDirectory(value) {
   if (!value) return false;
   return value.includes('/') || value === '.' || value === '..' || fs.existsSync(path.resolve(value));
+}
+
+function toNumber(value) {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 function writeMarkdownView(filePath, content) {

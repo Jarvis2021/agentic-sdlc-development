@@ -8,6 +8,9 @@ const ROOT = path.resolve(__dirname, '..');
 const CLI_PATH = path.resolve(ROOT, 'bin/cli.js');
 
 const {
+  recordOffset,
+  saveCheckpoint,
+  startSprint,
   startSession,
   upsertPlan,
   createTrace,
@@ -74,6 +77,29 @@ describe('session-runtime', () => {
 
     expect(snapshot.current_session.id).toBe(session.id);
     expect(snapshot.current_plan.id).toBe('proj-2-plan');
+    expect(snapshot.execution.current_mode).toBe('sprint');
+  });
+
+  it('tracks sprint offset and save behavior in runtime state', () => {
+    const session = startSession(tmpDir, { story: 'PROJ-3', actor: 'planner' });
+    upsertPlan(tmpDir, { id: 'proj-3-plan', title: 'Plan', session_id: session.id });
+
+    const sprint = startSprint(tmpDir, { actor: 'implementer', reason: 'continue work', reset_offset: true });
+    const offset = recordOffset(tmpDir, {
+      actor: 'council',
+      reason: 'context saturation',
+      council_verdict: 'offset-and-resume',
+      failure_streak: 2,
+    });
+    const saved = saveCheckpoint(tmpDir, { actor: 'checkpoint', reason: 'fresh resume handoff' });
+    const snapshot = getResumeSnapshot(tmpDir);
+
+    expect(sprint.sprint.burst_count).toBeGreaterThanOrEqual(1);
+    expect(offset.current_mode).toBe('resume');
+    expect(offset.offset_cursor.reason).toBe('context saturation');
+    expect(saved.last_save.reason).toBe('fresh resume handoff');
+    expect(snapshot.execution.sprint.offset_count).toBeGreaterThanOrEqual(1);
+    expect(snapshot.execution.sprint.save_count).toBeGreaterThanOrEqual(1);
   });
 });
 

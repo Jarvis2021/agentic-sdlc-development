@@ -12,6 +12,7 @@ AI-assisted delivery framework focused on minimal prompt context, structured run
 - Prefer structured runtime records over large narrative summaries.
 - Use tools and evidence for decisions whenever possible.
 - Keep editor integrations thin and reuse the same core runtime.
+- Work in Sprint/Offset/Save cycles so stalled efforts can reset without losing state.
 
 ## Quick start
 
@@ -91,10 +92,23 @@ What to prefer:
 ```bash
 agentic-sdlc plan checkout-flow --title "Checkout flow hardening" --story PROJ-123
 agentic-sdlc resume
+agentic-sdlc sprint --reason "focused implementation burst"
+agentic-sdlc offset --reason "context saturation" --council "offset-and-resume"
+agentic-sdlc save --reason "checkpoint before reset"
 agentic-sdlc trace --kind debug --command "npm test" --test-output "FAIL tests/cart.test.js"
 agentic-sdlc events --limit 20
 agentic-sdlc plugins list
 ```
+
+## Sprint Offset Save
+
+Sprint/Offset/Save is the operating loop for long or difficult tasks:
+
+- `Sprint`: stay in a focused execution burst while progress remains healthy
+- `Offset`: if retries, context noise, or weak progress signal that the current path is wasting time, pause and reset after council review
+- `Save`: persist the useful runtime state before compaction, handoff, or a fresh attempt
+
+The implementation lives in `.ai/session-state/` so agents can resume from structured facts instead of rebuilding large prompt context.
 
 ## Delivery and validation
 

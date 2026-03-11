@@ -1,6 +1,6 @@
 ---
 name: checkpointing
-description: Provides session checkpointing and recovery for Agentic SDLC Framework. Use when context window is filling up, before long operations, or to save progress. Ensures work continuity across sessions via session-ledger.md and NOW.md updates.
+description: Provides session checkpointing and recovery for Agentic SDLC Framework. Use when context window is filling up, before long operations, or to save progress. Ensures work continuity across sessions via structured runtime state, session-ledger.md, and NOW.md updates.
 argument-hint: Describe what checkpoint to create or recover from
 compatibility: ["cursor", "copilot", "claude-code", "windsurf", "amazon-q"]
 ---
@@ -9,12 +9,18 @@ compatibility: ["cursor", "copilot", "claude-code", "windsurf", "amazon-q"]
 
 Checkpointing preserves work progress across context resets and session boundaries.
 
+Checkpointing is the `Save` part of the Sprint/Offset/Save loop:
+- Sprint while the current approach is productive
+- Offset when retries or context noise make the burst inefficient
+- Save the smallest useful runtime state before resuming with a fresh strategy
+
 ### When to Checkpoint
 
 Checkpoint in these scenarios:
 - **Context approaching capacity** (80%+ used, if visible)
 - **Before long operations** (bulk refactor, large file generation)
 - **Phase completion** (after plan, after implement, after review)
+- **Before offsetting** to a new strategy after council review
 - **End of work session** (before user closes IDE)
 - **On demand** (user requests checkpoint via command)
 
@@ -60,6 +66,14 @@ Last updated: [CURRENT_ISO8601_TIMESTAMP]
 ## Blockers
 [List any blockers, or "None"]
 ```
+
+### Structured Save State
+
+Before writing markdown summaries, persist:
+- execution mode in `.ai/session-state/index.json`
+- latest offset cursor or trace boundary
+- save reason and timestamp
+- any open approvals or blockers still active
 
 ### Recovery from Checkpoint
 

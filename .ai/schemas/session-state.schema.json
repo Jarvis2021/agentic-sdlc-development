@@ -7,7 +7,8 @@
     "current_session_id",
     "current_plan_id",
     "current_trace_id",
-    "counters"
+    "counters",
+    "execution"
   ],
   "properties": {
     "schema_version": { "type": "string" },
@@ -25,6 +26,48 @@
         "approvals": { "type": "integer", "minimum": 0 },
         "diagnostics": { "type": "integer", "minimum": 0 },
         "events": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": ["current_mode", "sprint"],
+      "properties": {
+        "current_mode": { "type": "string", "enum": ["sprint", "resume"] },
+        "offset_cursor": {
+          "type": ["object", "null"],
+          "properties": {
+            "event_id": { "type": ["string", "null"] },
+            "trace_id": { "type": ["string", "null"] },
+            "plan_id": { "type": ["string", "null"] },
+            "session_id": { "type": ["string", "null"] },
+            "reason": { "type": ["string", "null"] },
+            "council_verdict": { "type": ["string", "null"] },
+            "created_at": { "type": ["string", "null"] }
+          }
+        },
+        "last_save": {
+          "type": ["object", "null"],
+          "properties": {
+            "reason": { "type": ["string", "null"] },
+            "source": { "type": ["string", "null"] },
+            "actor": { "type": ["string", "null"] },
+            "mode_before_save": { "type": ["string", "null"] },
+            "created_at": { "type": ["string", "null"] }
+          }
+        },
+        "sprint": {
+          "type": "object",
+          "required": ["status", "burst_count", "offset_count", "save_count", "failure_streak"],
+          "properties": {
+            "status": { "type": "string" },
+            "burst_count": { "type": "integer", "minimum": 0 },
+            "offset_count": { "type": "integer", "minimum": 0 },
+            "save_count": { "type": "integer", "minimum": 0 },
+            "failure_streak": { "type": "integer", "minimum": 0 },
+            "last_started_at": { "type": ["string", "null"] },
+            "last_evaluated_at": { "type": ["string", "null"] }
+          }
+        }
       }
     },
     "updated_at": { "type": ["string", "null"] }

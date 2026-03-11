@@ -9,8 +9,15 @@ function requireFrameworkModule(modulePath) {
   if (fs.existsSync(localCandidate)) {
     return require(localCandidate);
   }
-
-  return require(packageCandidate);
+  try {
+    return require(packageCandidate);
+  } catch (error) {
+    throw new Error(
+      `Agentic SDLC runtime module could not be resolved for ${normalizedPath}. ` +
+      `Tried local path ${localCandidate} and package path ${packageCandidate}. ` +
+      `Original error: ${error.message}`
+    );
+  }
 }
 
 const sessionRuntime = requireFrameworkModule('lib/session-runtime.js');
@@ -73,6 +80,22 @@ function getLatestTraceMarkdown(rootDir, traceId) {
 }
 
 function buildRuntimeItems(snapshot) {
+  const executionChildren = [];
+  if (snapshot.execution?.offset_cursor?.reason) {
+    executionChildren.push({
+      id: 'execution-offset',
+      label: `Offset: ${snapshot.execution.offset_cursor.reason}`,
+      description: snapshot.execution.offset_cursor.council_verdict || '',
+    });
+  }
+  if (snapshot.execution?.last_save?.reason) {
+    executionChildren.push({
+      id: 'execution-save',
+      label: `Last save: ${snapshot.execution.last_save.reason}`,
+      description: snapshot.execution.last_save.created_at || '',
+    });
+  }
+
   const items = [
     {
       id: 'session',
@@ -88,6 +111,12 @@ function buildRuntimeItems(snapshot) {
       id: 'trace',
       label: `Trace: ${snapshot.current_trace?.id || 'none'}`,
       description: snapshot.current_trace?.kind || '',
+    },
+    {
+      id: 'execution',
+      label: `Execution: ${snapshot.execution?.current_mode || 'unknown'}`,
+      description: snapshot.execution?.sprint?.status || '',
+      children: executionChildren,
     },
     {
       id: 'approvals',
@@ -168,7 +197,8 @@ function buildDiagnosticsItems(summary) {
 function buildStatusBarText(snapshot) {
   const sessionId = snapshot.current_session?.id || 'no session';
   const story = snapshot.current_session?.story || 'manual';
-  return `Agentic SDLC: ${story} (${sessionId})`;
+  const mode = snapshot.execution?.current_mode || 'unknown';
+  return `Agentic SDLC: ${story} (${sessionId}, ${mode})`;
 }
 
 function formatTotals(totals) {

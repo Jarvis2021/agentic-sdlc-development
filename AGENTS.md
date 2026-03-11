@@ -23,6 +23,13 @@ For ticket-driven work such as `PROJ-NNN`, fetch the ticket context, produce a p
 - Prefer structured runtime data in `.ai/session-state/` over narrative summaries.
 - Treat markdown reports as human-facing outputs, not default model context.
 
+## Sprint Offset Save
+
+- Sprint: work in a focused burst while progress remains healthy.
+- Offset: when context noise, repeated failure, or low progress makes the current approach inefficient, pause and get a council-backed strategy reset.
+- Save: persist the minimum reusable runtime state before compaction, reset, or handoff.
+- Resume from structured state, not from a large reconstructed prompt.
+
 ## Task Patterns
 
 | Task | Retrieve |

@@ -10,6 +10,7 @@ const EXTENSION_PKG = path.join(ROOT, 'packages/vscode-extension/package.json');
 const EXTENSION_README = path.join(ROOT, 'packages/vscode-extension/README.md');
 const EXTENSION_ICON = path.join(ROOT, 'packages/vscode-extension/icon.png');
 const EXTENSION_DIAGRAM = path.join(ROOT, 'packages/vscode-extension/media/architecture-diagram.png');
+const EXTENSION_DIR = path.join(ROOT, 'packages/vscode-extension');
 
 const {
   buildDiagnosticsItems,
@@ -35,6 +36,27 @@ function runCli(args = '', cwd = undefined) {
     encoding: 'utf8',
     cwd,
     env: { ...process.env, NODE_ENV: 'test' },
+  });
+}
+
+function listVsixEntries(vsixPath) {
+  const result = execSync(`python3 - <<'PY' "${vsixPath}"
+import json, sys, zipfile
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    print(json.dumps(sorted(archive.namelist())))
+PY`, {
+    encoding: 'utf8',
+  });
+  return JSON.parse(result);
+}
+
+function readVsixEntry(vsixPath, entryPath) {
+  return execSync(`python3 - <<'PY' "${vsixPath}" "${entryPath}"
+import sys, zipfile
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    print(archive.read(sys.argv[2]).decode('utf-8'))
+PY`, {
+    encoding: 'utf8',
   });
 }
 
@@ -86,9 +108,11 @@ describe('vscode extension runtime bridge', () => {
     const diagnosticsItems = buildDiagnosticsItems(getDiagnosticsFeed(tmpDir));
 
     expect(runtimeItems.some((item) => item.id === 'session')).toBe(true);
+    expect(runtimeItems.some((item) => item.id === 'execution')).toBe(true);
     expect(runtimeItems.some((item) => item.id === 'events')).toBe(true);
     expect(diagnosticsItems.some((item) => item.id === 'diagnostics-total')).toBe(true);
     expect(buildStatusBarText(snapshot)).toContain('Agentic SDLC');
+    expect(snapshot.execution.current_mode).toBe('sprint');
   });
 
   it('finds the latest trace markdown file', () => {
@@ -131,5 +155,31 @@ describe('vscode extension package manifest', () => {
     expect(readme).toContain('# Agentic SDLC');
     expect(readme).toContain('Compared with IDE-native agent features');
     expect(readme).toContain('spec-kit');
+  });
+
+  it('packages the framework runtime into the VSIX', () => {
+    const packageDir = createTempDir();
+    const vsixPath = path.join(packageDir, 'agentic-sdlc-vscode-test.vsix');
+
+    execSync(`npm run package -- --out "${vsixPath}"`, {
+      cwd: EXTENSION_DIR,
+      encoding: 'utf8',
+      env: { ...process.env, NODE_ENV: 'test' },
+    });
+
+    const entries = listVsixEntries(vsixPath);
+    expect(entries).toContain('extension/node_modules/agentic-sdlc-development/package.json');
+    expect(entries).toContain('extension/node_modules/agentic-sdlc-development/lib/session-runtime.js');
+    expect(entries).toContain('extension/node_modules/agentic-sdlc-development/lib/debug-fabric.js');
+
+    const runtimeSource = readVsixEntry(
+      vsixPath,
+      'extension/node_modules/agentic-sdlc-development/lib/session-runtime.js'
+    );
+    expect(runtimeSource).toContain('current_mode');
+    expect(runtimeSource).toContain('recordOffset');
+    expect(runtimeSource).toContain('saveCheckpoint');
+
+    cleanupDir(packageDir);
   });
 });

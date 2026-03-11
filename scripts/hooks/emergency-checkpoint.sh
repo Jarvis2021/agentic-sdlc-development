@@ -11,6 +11,8 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
 # Files to update
 LEDGER=".ai/session-ledger.md"
 NOW_FILE=".ai/NOW.md"
+INDEX_FILE=".ai/session-state/index.json"
+EVENTS_FILE=".ai/session-state/events.jsonl"
 
 echo "[EMERGENCY CHECKPOINT] Creating checkpoint before context reset..."
 
@@ -57,6 +59,65 @@ if [ -f "$NOW_FILE" ]; then
     echo "✓ Emergency checkpoint saved to NOW.md"
 else
     echo "⚠ NOW.md not found, checkpoint incomplete"
+fi
+
+if [ -f "$INDEX_FILE" ]; then
+    python3 - <<'PY' "$INDEX_FILE" "$EVENTS_FILE" "$TIMESTAMP"
+import json
+import os
+import sys
+
+index_path, events_path, timestamp = sys.argv[1:4]
+
+with open(index_path) as fh:
+    index = json.load(fh)
+
+execution = index.setdefault("execution", {})
+sprint = execution.setdefault("sprint", {})
+sprint["status"] = "saved"
+sprint["save_count"] = int(sprint.get("save_count", 0)) + 1
+sprint["last_evaluated_at"] = timestamp
+
+execution["last_save"] = {
+    "reason": "emergency checkpoint",
+    "source": "hook",
+    "actor": "checkpoint",
+    "mode_before_save": execution.get("current_mode", "sprint"),
+    "created_at": timestamp,
+}
+execution["current_mode"] = "resume"
+index["updated_at"] = timestamp
+
+with open(index_path, "w") as fh:
+    json.dump(index, fh, indent=2)
+    fh.write("\n")
+
+if os.path.exists(events_path):
+    event = {
+        "id": f"evt_save_{timestamp.replace(':', '').replace('-', '')}",
+        "type": "execution.save",
+        "actor": "checkpoint",
+        "source": "hook",
+        "severity": "info",
+        "session_id": index.get("current_session_id"),
+        "plan_id": index.get("current_plan_id"),
+        "trace_id": index.get("current_trace_id"),
+        "message": "Saved emergency checkpoint before context reset",
+        "payload": {
+            "reason": "emergency checkpoint",
+            "mode_before_save": execution["last_save"]["mode_before_save"],
+        },
+        "created_at": timestamp,
+    }
+    with open(events_path, "a") as fh:
+        fh.write(json.dumps(event) + "\n")
+    index.setdefault("counters", {})
+    index["counters"]["events"] = int(index["counters"].get("events", 0)) + 1
+    with open(index_path, "w") as fh:
+        json.dump(index, fh, indent=2)
+        fh.write("\n")
+PY
+    echo "✓ Runtime checkpoint state saved to session-state/index.json"
 fi
 
 echo "[CHECKPOINT] Emergency checkpoint complete. Safe to reset context."

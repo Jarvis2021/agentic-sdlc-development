@@ -19,7 +19,7 @@ This extension focuses on the part that usually goes missing:
 
 ## What you get
 
-- **Runtime view** for active session, plan, trace, approvals, task counts, and recent events
+- **Runtime view** for active session, plan, trace, execution mode, approvals, task counts, and recent events
 - **Diagnostics view** for failure summaries by kind and severity
 - **Capture commands** for command failures, test failures, CI failures, and browser verification
 - **Resume snapshot** command that opens the structured runtime state as JSON
@@ -38,7 +38,7 @@ The VS Code extension does not create a second workflow engine. It reuses the sa
 3. **Workspace runtime**
    Reads and writes `.ai/session-state/`, `.ai/traces/`, and diagnostics artifacts.
 4. **Core framework**
-   Shares logic with the CLI, MCP surface, and repo-portable runtime.
+   Shares logic with the CLI, MCP surface, and bundled runtime modules shipped with the extension package.
 
 ## Where this fits
 
@@ -93,6 +93,8 @@ npx agentic-sdlc-development init .
 code --install-extension PramodKumarVoola.agentic-sdlc-vscode
 ```
 
+The packaged extension syncs and bundles the runtime modules it needs for Marketplace-style installs and `.vsix` distribution.
+
 3. Open the Command Palette and run one of:
 
 - `Agentic SDLC: Refresh`
@@ -122,7 +124,7 @@ code --install-extension PramodKumarVoola.agentic-sdlc-vscode
 
 - VS Code `1.110+`
 - A workspace using the Agentic SDLC runtime layout
-- `agentic-sdlc-development` available in the repo or installed as a package dependency
+- a workspace using the Agentic SDLC runtime layout
 
 ## Roadmap direction
 

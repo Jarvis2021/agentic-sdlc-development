@@ -24,37 +24,37 @@ Classify every task as TRIVIAL/LOW/MEDIUM/HIGH before any action. Classification
 
 ---
 
-## ADR-002: Classification-Based Token Budgets
+## ADR-002: Classification-Based Retrieval Guardrails
 **Status**: Accepted
 **Date**: 2026-03-08
 
 ### Context
-Unbounded LLM context leads to cost spikes and degraded reasoning quality. Without guardrails, agents consume full context windows even for trivial tasks.
+Unbounded LLM context leads to cost spikes and degraded reasoning quality. Without guardrails, agents consume full context windows even for trivial tasks and rely on large prompt payloads instead of targeted retrieval.
 
 ### Decision
-Fixed token budgets per classification: TRIVIAL 5K, LOW 20K, MEDIUM 80K, HIGH 200K. Compact conversation at 40% of context window.
+Use fixed retrieval guardrails per classification: TRIVIAL 5K, LOW 20K, MEDIUM 80K, HIGH 200K. Retrieve only the required runtime state, rules, and protocols, then compact when the useful context is getting noisy.
 
 ### Consequences
 - Cost-predictable sessions with clear per-task ceilings
-- Agents must be concise and prioritize high-value context
-- HIGH tasks get deep reasoning at the expense of higher cost, which is justified by risk
+- Agents must prefer selective retrieval over broader prompt loading
+- HIGH tasks get deeper reasoning and broader evidence only when risk justifies it
 
 ---
 
-## ADR-003: Three-Level Progressive Protocol Disclosure
+## ADR-003: Progressive Retrieval Disclosure
 **Status**: Accepted
 **Date**: 2026-03-08
 
 ### Context
-Loading all protocol files (~40K tokens) at session start wastes context on protocols that may never be needed for the current task.
+Loading all protocol files at session start wastes context on guidance that may never be needed for the current task.
 
 ### Decision
-Level 0 (context-index.yaml, ~3000 tokens, always loaded) routes to Level 1 (protocol summaries, loaded on demand) and Level 2 (full protocols, loaded only when executing as that role).
+`context-index.yaml` acts as a small lookup map. Runtime state, rules, and optional protocol detail are then pulled on demand based on the task and current execution state.
 
 ### Consequences
-- Baseline context cost drops from ~40K to ~8K tokens per session
-- Protocols lazy-load based on task classification, reducing noise
-- Requires well-maintained routing metadata in context-index.yaml
+- Baseline context stays smaller and more relevant to the active task
+- Protocols load based on task classification and current runtime needs, reducing noise
+- Requires well-maintained routing metadata in `context-index.yaml`
 
 ---
 

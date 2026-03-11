@@ -11,7 +11,7 @@ The following produce identical structural output regardless of which LLM model 
 
 ### Classification Rules
 - TRIVIAL/LOW/MEDIUM/HIGH criteria are defined in context-index.yaml
-- Token budgets are fixed numbers (5K/20K/80K/200K)
+- Retrieval guardrails and token budgets are fixed numbers (5K/20K/80K/200K)
 - Gate requirements per classification are explicit
 
 ### Quality Gates
@@ -44,7 +44,7 @@ The following produce identical structural output regardless of which LLM model 
 ### Speed
 - Faster models complete tasks in fewer seconds
 - Token usage varies by model efficiency
-- Budget enforcement normalizes cost regardless of model
+- Retrieval guardrails normalize cost regardless of model
 
 ## How to Verify Determinism
 
@@ -58,6 +58,6 @@ The following produce identical structural output regardless of which LLM model 
 ## Design Principle
 
 Determinism is achieved by separating structure from content:
-- Structure (files, directories, templates, rules, gates) is deterministic
+- Structure (files, directories, templates, retrieval rules, runtime schema, gates) is deterministic
 - Content (prose, analysis, recommendations) varies by model quality
-- The framework controls structure; the model provides content
+- The framework controls retrieval and structure; the model provides content

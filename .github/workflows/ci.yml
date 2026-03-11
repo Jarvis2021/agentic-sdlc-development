@@ -173,6 +173,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        if: hashFiles('package.json') != '' || hashFiles('packages/vscode-extension/package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install extension dependencies
+        if: hashFiles('packages/vscode-extension/package.json') != ''
+        run: |
+          cd packages/vscode-extension
+          if [ -f package-lock.json ]; then npm ci; else npm install --ignore-scripts; fi
+
       - name: Validate RBAC configuration
         run: |
           if [ ! -f rbac-factbook.yaml ]; then
@@ -211,3 +223,31 @@ jobs:
             echo "$VIOLATIONS"
           fi
           echo "IDE-agnostic check complete"
+
+      - name: Package VS Code extension
+        if: hashFiles('packages/vscode-extension/package.json') != ''
+        run: |
+          cd packages/vscode-extension
+          npm run package -- --out agentic-sdlc-ci.vsix
+
+      - name: Verify VSIX runtime contents
+        if: hashFiles('packages/vscode-extension/package.json') != ''
+        run: |
+          python3 - <<'PY'
+          import sys, zipfile
+          required = {
+              "extension/node_modules/agentic-sdlc-development/package.json",
+              "extension/node_modules/agentic-sdlc-development/lib/session-runtime.js",
+              "extension/node_modules/agentic-sdlc-development/lib/debug-fabric.js",
+          }
+          with zipfile.ZipFile("packages/vscode-extension/agentic-sdlc-ci.vsix") as archive:
+              entries = set(archive.namelist())
+              runtime_source = archive.read("extension/node_modules/agentic-sdlc-development/lib/session-runtime.js").decode("utf-8")
+          missing = sorted(required - entries)
+          if missing:
+              raise SystemExit(f"Missing VSIX runtime files: {missing}")
+          for token in ("current_mode", "recordOffset", "saveCheckpoint"):
+              if token not in runtime_source:
+                  raise SystemExit(f"Bundled runtime is missing expected token: {token}")
+          print("VSIX runtime files verified")
+          PY

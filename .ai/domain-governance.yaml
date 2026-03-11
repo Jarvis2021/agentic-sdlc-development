@@ -1,5 +1,5 @@
-# domain-governance.yaml — organization governance layer
-# Applied to all governed repos. Loaded on every agent turn.
+# domain-governance.yaml - organization governance layer
+# Retrieve for governed-domain, policy, compliance, or cross-repo work. Do not load by default on every task.
 
 org: platform
 version: "1.0"

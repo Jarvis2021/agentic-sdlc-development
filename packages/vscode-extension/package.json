@@ -105,8 +105,9 @@
     }
   },
   "scripts": {
-    "package": "npx @vscode/vsce package",
-    "publish:marketplace": "npx @vscode/vsce publish"
+    "prepare:runtime": "node -e \"const fs=require('fs');const path=require('path');const repoRoot=path.resolve(process.cwd(),'../..');const sourceDir=path.join(repoRoot,'lib');const targetDir=path.join(process.cwd(),'node_modules','agentic-sdlc-development','lib');if(fs.existsSync(sourceDir)&&fs.existsSync(targetDir)){for(const name of ['session-runtime.js','debug-fabric.js']){fs.copyFileSync(path.join(sourceDir,name),path.join(targetDir,name));}}\"",
+    "package": "npm run prepare:runtime && npx @vscode/vsce package",
+    "publish:marketplace": "npm run prepare:runtime && npx @vscode/vsce publish"
   },
   "dependencies": {
     "agentic-sdlc-development": "^1.0.0"
@@ -117,6 +118,8 @@
     "icon.png",
     "extension.js",
     "lib/**/*.js",
+    "node_modules/agentic-sdlc-development/package.json",
+    "node_modules/agentic-sdlc-development/lib/**/*.js",
     "media/**/*.svg",
     "media/**/*.png"
   ]
